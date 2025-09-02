@@ -1,4 +1,10 @@
 bool Display_PROscoreRX_Init = false;
+
+static void CloseIcon_Clicked(lv_event_t* e) {
+  CurrentScreen = 0x0000;
+  Display_PROscoreRX_Post();
+}
+
 void Display_PROscoreRX() {
   if (!Display_PROscoreRX_Init) {
     ClearScreen();
@@ -9,13 +15,20 @@ void Display_PROscoreRX() {
     lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
 
 
-    //PRINTING SCREEN ID
-    CurrentScreen_Label = lv_label_create(scr);
-    char hex_buffer[8];
-    snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
-    lv_label_set_text(CurrentScreen_Label, hex_buffer);
-    lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 5, 5);
-    lv_obj_set_style_text_font(CurrentScreen_Label, &lv_font_montserrat_12, 0);
+    // //PRINTING SCREEN ID
+    // CurrentScreen_Label = lv_label_create(scr);
+    // char hex_buffer[8];
+    // snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
+    // lv_label_set_text(CurrentScreen_Label, hex_buffer);
+    // lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 5, 5);
+    // lv_obj_set_style_text_font(CurrentScreen_Label, &lv_font_montserrat_12, 0);
+    lv_obj_t* Icon_Close_Label = lv_label_create(scr);
+    lv_label_set_text(Icon_Close_Label, LV_SYMBOL_CLOSE);
+    lv_obj_align(Icon_Close_Label, LV_ALIGN_TOP_LEFT, 5, 5);
+    lv_obj_set_style_text_font(Icon_Close_Label, &lv_font_montserrat_20, 0);
+    lv_obj_set_style_text_color(Icon_Close_Label, lv_color_white(), 0);
+    lv_obj_add_flag(Icon_Close_Label, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(Icon_Close_Label, CloseIcon_Clicked, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t* icon_label = lv_label_create(scr);
     lv_label_set_text(icon_label, LV_SYMBOL_WIFI);
@@ -23,9 +36,8 @@ void Display_PROscoreRX() {
     lv_obj_set_style_text_font(icon_label, &lv_font_montserrat_16, 0);
     lv_obj_set_style_text_color(icon_label, lv_color_hex(0x00FF00), 0);
 
-
     //GAMETIME
-    GameTime_Minute = 5;
+    GameTime_Minute = 10;
     GameTime_Second = 0;
     GameTime_Millis = 0;
 
@@ -49,8 +61,8 @@ void Display_PROscoreRX() {
     lv_obj_set_style_text_color(Label_GameTime, lv_color_hex(0xFF8C00), 0);
 
     //SHOTCLOCK
-    ShotClock_Second=24;
-    ShotClock_Millis=0;
+    ShotClock_Second = 24;
+    ShotClock_Millis = 0;
     lv_obj_t* Label_ShotClock_Text = lv_label_create(scr);
     lv_label_set_text(Label_ShotClock_Text, "SHOT CLOCK");
     lv_obj_align(Label_ShotClock_Text, LV_ALIGN_CENTER, 0, -30);
@@ -70,8 +82,8 @@ void Display_PROscoreRX() {
     lv_obj_set_style_text_color(Label_ShotClock, lv_color_hex(0x00FF00), 0);
 
     //SCORES
-    HomeScore = 100;
-    GuestScore = 100;
+    HomeScore = 20;
+    GuestScore = 20;
 
     // Home team label and score
     lv_obj_t* Label_HomeTeam_Text = lv_label_create(scr);
@@ -85,14 +97,16 @@ void Display_PROscoreRX() {
     char home_score_str[16];
     snprintf(home_score_str, sizeof(home_score_str), "%d", HomeScore);
     lv_label_set_text(Label_HomeScore, home_score_str);
-    lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, 12, 0);
+    uint home_margin = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25
+                                                                 : 30;
+    lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, home_margin, 0);
     lv_obj_set_style_text_font(Label_HomeScore, &lv_font_montserrat_48, 0);
     lv_obj_set_style_text_color(Label_HomeScore, lv_color_hex(0xFF0000), 0);
 
     // Guest team label and score
     lv_obj_t* Label_GuestTeam_Text = lv_label_create(scr);
     lv_label_set_text(Label_GuestTeam_Text, "GUEST");
-    lv_obj_align(Label_GuestTeam_Text, LV_ALIGN_BOTTOM_RIGHT, -21, -44);
+    lv_obj_align(Label_GuestTeam_Text, LV_ALIGN_BOTTOM_RIGHT, -15, -44);
     lv_obj_set_style_text_font(Label_GuestTeam_Text, &lv_font_montserrat_18, 0);
     lv_obj_set_style_text_color(Label_GuestTeam_Text, lv_color_white(), 0);
 
@@ -106,4 +120,8 @@ void Display_PROscoreRX() {
     lv_obj_set_style_text_color(Label_GuestScore, lv_color_hex(0xFF0000), 0);
     Display_PROscoreRX_Init = true;
   }
+}
+
+void Display_PROscoreRX_Post() {
+  Display_PROscoreRX_Init = false;
 }

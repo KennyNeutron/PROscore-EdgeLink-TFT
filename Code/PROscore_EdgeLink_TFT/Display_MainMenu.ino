@@ -27,6 +27,7 @@ void on_button_click(lv_event_t* e) {
     case 1:  // PROscore RX
       // Handle PROscore RX screen
       CurrentScreen = 0x2000;  // Change to PROscore RX screen
+      Display_MainMenu_Post();
       break;
     case 2:  // HC-05 Tester
       // Handle HC-05 Tester screen
@@ -118,4 +119,8 @@ void Display_MainMenu() {
     lv_obj_set_style_text_font(CurrentScreen_Label, &lv_font_montserrat_12, 0);
     Display_MainMenu_Init = true;
   }
+}
+
+void Display_MainMenu_Post() {
+  Display_MainMenu_Init = false;
 }
