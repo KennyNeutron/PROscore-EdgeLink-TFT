@@ -26,7 +26,7 @@ void on_button_click(lv_event_t* e) {
       break;
     case 1:  // PROscore RX
       // Handle PROscore RX screen
-      CurrentScreen = 0x2000; // Change to PROscore RX screen
+      CurrentScreen = 0x2000;  // Change to PROscore RX screen
       break;
     case 2:  // HC-05 Tester
       // Handle HC-05 Tester screen
@@ -106,11 +106,11 @@ void Display_MainMenu() {
 
     CurrentScreen_Label = lv_label_create(scr);
 
-    //PRINTING SCREEN ID  
-    char hex_buffer[8];  
+    //PRINTING SCREEN ID
+    char hex_buffer[8];
     snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
     lv_label_set_text(CurrentScreen_Label, hex_buffer);
-    lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 0, 0);  
+    lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_obj_set_style_text_font(CurrentScreen_Label, &lv_font_montserrat_12, 0);
     Display_MainMenu_Init = true;
   }

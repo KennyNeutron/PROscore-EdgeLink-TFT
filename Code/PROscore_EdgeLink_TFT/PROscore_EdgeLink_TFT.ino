@@ -33,7 +33,7 @@
  *
  * Author: Kenny Neutron
  *******************************************************/
-#include "variable.h"
+#include "EdgeLink_Variables.h"
 #include <lvgl.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Touchscreen.h>
@@ -97,8 +97,8 @@ void touchscreen_read(lv_indev_t* indev, lv_indev_data_t* data) {
 
 
 void ClearScreen() {
-    lv_obj_t* scr = lv_screen_active();
-    lv_obj_clean(scr);  // Deletes ALL objects on the screen at once
+  lv_obj_t* scr = lv_screen_active();
+  lv_obj_clean(scr);  // Deletes ALL objects on the screen at once
 }
 
 void lv_create_main_gui(void) {

@@ -1,1 +1,0 @@
-uint16_t CurrentScreen = 0x0000;
