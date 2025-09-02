@@ -136,6 +136,7 @@ void setup() {
 
   // Function to draw the GUI (text, buttons and sliders)
   // lv_create_main_gui();
+  CurrentScreen=0x2000;
 }
 
 void loop() {
