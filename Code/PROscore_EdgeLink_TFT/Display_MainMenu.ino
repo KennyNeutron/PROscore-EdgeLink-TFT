@@ -44,11 +44,15 @@ void on_button_click(lv_event_t* e) {
 }
 
 bool Display_MainMenu_Init = false;
+
 void Display_MainMenu() {
   if (!Display_MainMenu_Init) {
-
+    ClearScreen();
 
     lv_obj_t* scr = lv_screen_active();
+
+    lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0);
+    lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
 
     // Display dimensions in landscape: 320x240
     const int DISPLAY_WIDTH = 320;
