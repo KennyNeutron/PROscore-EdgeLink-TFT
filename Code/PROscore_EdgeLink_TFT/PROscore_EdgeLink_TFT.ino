@@ -32,7 +32,8 @@
  *   - Power: Li-ion battery with USB-C charging
  *
  * Author: Kenny Neutron
- *******************************************************/  
+ *******************************************************/
+#include "variable.h"
 #include <lvgl.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Touchscreen.h>
@@ -55,17 +56,19 @@ int x, y, z;
 #define DRAW_BUF_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT / 6 * (LV_COLOR_DEPTH / 8))
 uint32_t draw_buf[DRAW_BUF_SIZE / 4];
 
+lv_obj_t* CurrentScreen_Label;
+
 // If logging is enabled, it will inform the user about what is happening in the library
-void log_print(lv_log_level_t level, const char * buf) {
+void log_print(lv_log_level_t level, const char* buf) {
   LV_UNUSED(level);
   Serial.println(buf);
   Serial.flush();
 }
 
 // Get the Touchscreen data
-void touchscreen_read(lv_indev_t * indev, lv_indev_data_t * data) {
+void touchscreen_read(lv_indev_t* indev, lv_indev_data_t* data) {
   // Checks if Touchscreen was touched, and prints X, Y and Pressure (Z)
-  if(touchscreen.tirqTouched() && touchscreen.touched()) {
+  if (touchscreen.tirqTouched() && touchscreen.touched()) {
     // Get Touchscreen points
     TS_Point p = touchscreen.getPoint();
     // Calibrate Touchscreen points with map function to the correct width and height
@@ -87,52 +90,26 @@ void touchscreen_read(lv_indev_t * indev, lv_indev_data_t * data) {
     Serial.print(" | Pressure = ");
     Serial.print(z);
     Serial.println();*/
-  }
-  else {
+  } else {
     data->state = LV_INDEV_STATE_RELEASED;
   }
 }
 
-int btn1_count = 0;
-// Callback that is triggered when btn1 is clicked
-static void event_handler_btn1(lv_event_t * e) {
-  lv_event_code_t code = lv_event_get_code(e);
-  if(code == LV_EVENT_CLICKED) {
-    btn1_count++;
-    LV_LOG_USER("Button clicked %d", (int)btn1_count);
-  }
-}
 
-// Callback that is triggered when btn2 is clicked/toggled
-static void event_handler_btn2(lv_event_t * e) {
-  lv_event_code_t code = lv_event_get_code(e);
-  lv_obj_t * obj = (lv_obj_t*) lv_event_get_target(e);
-  if(code == LV_EVENT_VALUE_CHANGED) {
-    LV_UNUSED(obj);
-    LV_LOG_USER("Toggled %s", lv_obj_has_state(obj, LV_STATE_CHECKED) ? "on" : "off");
-  }
-}
-
-static lv_obj_t * slider_label;
-// Callback that prints the current slider value on the TFT display and Serial Monitor for debugging purposes
-static void slider_event_callback(lv_event_t * e) {
-  lv_obj_t * slider = (lv_obj_t*) lv_event_get_target(e);
-  char buf[8];
-  lv_snprintf(buf, sizeof(buf), "%d%%", (int)lv_slider_get_value(slider));
-  lv_label_set_text(slider_label, buf);
-  lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
-  LV_LOG_USER("Slider changed to %d%%", (int)lv_slider_get_value(slider));
+void ClearScreen() {
+    lv_obj_t* scr = lv_screen_active();
+    lv_obj_clean(scr);  // Deletes ALL objects on the screen at once
 }
 
 void lv_create_main_gui(void) {
-  Display_MainMenu();
+  Display();
 }
 
 void setup() {
   String LVGL_Arduino = String("LVGL Library Version: ") + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
   Serial.begin(115200);
   Serial.println(LVGL_Arduino);
-  
+
   // Start LVGL
   lv_init();
   // Register print function for debugging
@@ -146,22 +123,23 @@ void setup() {
   touchscreen.setRotation(2);
 
   // Create a display object
-  lv_display_t * disp;
+  lv_display_t* disp;
   // Initialize the TFT display using the TFT_eSPI library
   disp = lv_tft_espi_create(SCREEN_WIDTH, SCREEN_HEIGHT, draw_buf, sizeof(draw_buf));
   lv_display_set_rotation(disp, LV_DISPLAY_ROTATION_270);
-    
+
   // Initialize an LVGL input device object (Touchscreen)
-  lv_indev_t * indev = lv_indev_create();
+  lv_indev_t* indev = lv_indev_create();
   lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
   // Set the callback function to read Touchscreen input
   lv_indev_set_read_cb(indev, touchscreen_read);
 
   // Function to draw the GUI (text, buttons and sliders)
-  lv_create_main_gui();
+  // lv_create_main_gui();
 }
 
 void loop() {
+  Display();
   lv_task_handler();  // let the GUI do its work
   lv_tick_inc(5);     // tell LVGL how much time has passed
   delay(5);           // let this time pass
