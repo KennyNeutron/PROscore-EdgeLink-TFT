@@ -2,6 +2,8 @@
 lv_obj_t* buttons[6];
 lv_obj_t* status_label;
 
+bool Display_MainMenu_Init = false;
+
 void on_button_click(lv_event_t* e) {
   // Get button index from user data
   int btn_index = (int)(intptr_t)lv_event_get_user_data(e);
@@ -27,7 +29,7 @@ void on_button_click(lv_event_t* e) {
     case 1:  // PROscore RX
       // Handle PROscore RX screen
       CurrentScreen = 0x2000;  // Change to PROscore RX screen
-      Display_MainMenu_Post();
+      Display_MainMenu_POST();
       break;
     case 2:  // HC-05 Tester
       // Handle HC-05 Tester screen
@@ -35,7 +37,7 @@ void on_button_click(lv_event_t* e) {
     case 3:  // PROscore TX
       // Handle PROscore TX screen
       CurrentScreen = 0x4000;  // Change to PROscore TX screen
-      Display_MainMenu_Post();
+      Display_MainMenu_POST();
       break;
     case 4:  // Settings
       // Handle Settings screen
@@ -46,10 +48,8 @@ void on_button_click(lv_event_t* e) {
   }
 }
 
-bool Display_MainMenu_Init = false;
+void Display_MainMenu_PRE(){
 
-void Display_MainMenu() {
-  if (!Display_MainMenu_Init) {
     ClearScreen();
 
     lv_obj_t* scr = lv_screen_active();
@@ -119,10 +119,16 @@ void Display_MainMenu() {
     lv_label_set_text(CurrentScreen_Label, hex_buffer);
     lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_obj_set_style_text_font(CurrentScreen_Label, &lv_font_montserrat_12, 0);
+}
+
+void Display_MainMenu() {
+  if (!Display_MainMenu_Init) {
+    Display_MainMenu_PRE();
     Display_MainMenu_Init = true;
   }
 }
 
-void Display_MainMenu_Post() {
+
+void Display_MainMenu_POST() {
   Display_MainMenu_Init = false;
 }
