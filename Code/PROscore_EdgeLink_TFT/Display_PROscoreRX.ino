@@ -1,8 +1,16 @@
 bool Display_PROscoreRX_Init = false;
 
 static void CloseIcon_Clicked(lv_event_t* e) {
-  CurrentScreen = 0x0000;
-  Display_PROscoreRX_POST();
+  switch (CurrentScreen) {
+    case 0x2000:
+      CurrentScreen = 0x0000;
+      Display_PROscoreRX_POST();
+      break;
+    case 0x2100:
+      CurrentScreen = 0x2000;
+      Display_PROscoreRX_Settings_POST();
+      break;
+  }
 }
 
 static void SettingsIcon_Clicked(lv_event_t* e) {
@@ -38,8 +46,8 @@ void Display_PROscoreRX_PRE() {
   lv_obj_align(Icon_WIFI_Label, LV_ALIGN_TOP_RIGHT, -5, 5);
 
   //Settings Icon
-  lv_obj_t* Icon_Settings_Label = create_label(scr, LV_SYMBOL_SETTINGS, &lv_font_montserrat_24, lv_palette_main(LV_PALETTE_GREY));
-  lv_obj_align(Icon_Settings_Label, LV_ALIGN_BOTTOM_MID, 0, -70);
+  lv_obj_t* Icon_Settings_Label = create_label(scr, LV_SYMBOL_SETTINGS, &lv_font_montserrat_30, lv_palette_main(LV_PALETTE_GREY));
+  lv_obj_align(Icon_Settings_Label, LV_ALIGN_BOTTOM_MID, 0, -60);
   lv_obj_add_flag(Icon_Settings_Label, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(Icon_Settings_Label, SettingsIcon_Clicked, LV_EVENT_CLICKED, NULL);
 
@@ -101,7 +109,7 @@ void Display_PROscoreRX_PRE() {
   //Foul Section
   //Home Foul
   lv_obj_t* Label_HomeFoul_Text = create_label(scr, "FOUL", &lv_font_montserrat_14, lv_color_white());
-  lv_obj_align(Label_HomeFoul_Text, LV_ALIGN_LEFT_MID, 12, -0);
+  lv_obj_align(Label_HomeFoul_Text, LV_ALIGN_LEFT_MID, 12, 0);
 
   char STR_HomeFoul[3];
   snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
@@ -118,7 +126,6 @@ void Display_PROscoreRX_PRE() {
   lv_obj_align(Label_GuestFoul, LV_ALIGN_RIGHT_MID, -18, 20);
 
   //Time Out Section
-  //Home Time Out
   lv_obj_t* Label_TimeOut_Text = create_label(scr, "T.OUT", &lv_font_montserrat_14, lv_color_white());
   lv_obj_align(Label_TimeOut_Text, LV_ALIGN_LEFT_MID, 12, -60);
 
