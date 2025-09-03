@@ -19,4 +19,8 @@ uint8_t GuestTOut;
 
 uint8_t Period;
 uint8_t BallPoss;
-bool Buzzer;    
+bool Buzzer;
+
+//PROscore Settings
+bool HasMillis = false;
+bool HasTimeOut = false;

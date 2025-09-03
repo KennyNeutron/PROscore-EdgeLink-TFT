@@ -155,28 +155,24 @@ void Display_PROscoreRX_PRE() {
   BallPoss = 0;
   //Ball Poss Section
   if (BallPoss == 0) {
-
     lv_obj_t* Icon_Left_Label = create_label(scr, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_black());
     lv_obj_align(Icon_Left_Label, LV_ALIGN_BOTTOM_MID, -45, -21);
 
     lv_obj_t* Icon_Right_Label = create_label(scr, LV_SYMBOL_RIGHT, &lv_font_montserrat_32, lv_color_black());
     lv_obj_align(Icon_Right_Label, LV_ALIGN_BOTTOM_MID, 45, -21);
   } else if (BallPoss == 1) {
-
     lv_obj_t* Icon_Left_Label = create_label(scr, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_hex(0xFFFF00));
     lv_obj_align(Icon_Left_Label, LV_ALIGN_BOTTOM_MID, -45, -21);
 
     lv_obj_t* Icon_Right_Label = create_label(scr, LV_SYMBOL_RIGHT, &lv_font_montserrat_32, lv_color_black());
     lv_obj_align(Icon_Right_Label, LV_ALIGN_BOTTOM_MID, 45, -21);
   } else if (BallPoss == 2) {
-
     lv_obj_t* Icon_Left_Label = create_label(scr, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_black());
     lv_obj_align(Icon_Left_Label, LV_ALIGN_BOTTOM_MID, -45, -21);
 
     lv_obj_t* Icon_Right_Label = create_label(scr, LV_SYMBOL_RIGHT, &lv_font_montserrat_32, lv_color_hex(0xFFFF00));
     lv_obj_align(Icon_Right_Label, LV_ALIGN_BOTTOM_MID, 45, -21);
   } else {
-
     lv_obj_t* Icon_Left_Label = create_label(scr, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_black());
     lv_obj_align(Icon_Left_Label, LV_ALIGN_BOTTOM_MID, -45, -21);
 
