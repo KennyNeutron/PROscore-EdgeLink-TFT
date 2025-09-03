@@ -6,7 +6,7 @@ static void CloseIcon_Clicked(lv_event_t* e) {
 }
 
 static void SettingsIcon_Clicked(lv_event_t* e) {
-  CurrentScreen = 0x0001;
+  CurrentScreen = 0x2100;
   Display_PROscoreRX_Post();
 }
 

@@ -14,8 +14,7 @@ void Display_PROscoreTX(){
     lv_obj_t* CurrentScreen_Label = create_label(scr, hex_buffer, &lv_font_montserrat_12, lv_color_white());
     lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 0, 0);
 
-    Display_MainMenu_Init = true;
-
     Display_PROscoreTX_Init = true;
  }   
+
 }

@@ -9,7 +9,7 @@ void Display() {
     case 0x4000:
       Display_PROscoreTX();
       break;
-    case 0x0001:
+    case 0x2100:
       Display_PROscoreRX_Settings();
       break;
   }
