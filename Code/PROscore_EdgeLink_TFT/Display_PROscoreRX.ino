@@ -10,6 +10,10 @@ static void CloseIcon_Clicked(lv_event_t* e) {
       CurrentScreen = 0x2000;
       Display_PROscoreRX_Settings_POST();
       break;
+    case 0x6000:
+      CurrentScreen = 0x0000;
+      Display_About_POST();
+      break;
   }
 }
 

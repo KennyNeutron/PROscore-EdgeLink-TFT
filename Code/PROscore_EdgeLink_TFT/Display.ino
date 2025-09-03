@@ -12,5 +12,8 @@ void Display() {
     case 0x2100:
       Display_PROscoreRX_Settings();
       break;
+    case 0x6000:
+      Display_About();
+      break;
   }
 }

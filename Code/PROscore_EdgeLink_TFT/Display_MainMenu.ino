@@ -43,82 +43,92 @@ void on_button_click(lv_event_t* e) {
       // Handle Settings screen
       break;
     case 5:  // About
+      CurrentScreen = 0x6000;
+      Display_MainMenu_POST();
       // Handle about screen
       break;
   }
 }
 
-void Display_MainMenu_PRE(){
+void Display_MainMenu_PRE() {
 
-    ClearScreen();
+  ClearScreen();
 
-    lv_obj_t* scr = lv_screen_active();
+  lv_obj_t* scr = lv_screen_active();
 
-    lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0);
-    lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+  lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0);
+  lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
 
-    // Display dimensions in landscape: 320x240
-    const int DISPLAY_WIDTH = 320;
-    const int DISPLAY_HEIGHT = 240;
+  // Display dimensions in landscape: 320x240
+  const int DISPLAY_WIDTH = 320;
+  const int DISPLAY_HEIGHT = 240;
 
-    // Button dimensions and spacing
-    const int BTN_WIDTH = 120;  // Button width
-    const int BTN_HEIGHT = 60;  // Button height
-    const int MARGIN_X = 20;    // Left/right margin
-    const int MARGIN_Y = 20;    // Top/bottom margin
-    const int SPACING_X = 30;   // Horizontal spacing between buttons
-    const int SPACING_Y = 10;   // Vertical spacing between buttons
+  // Button dimensions and spacing
+  const int BTN_WIDTH = 120;  // Button width
+  const int BTN_HEIGHT = 60;  // Button height
+  const int MARGIN_X = 20;    // Left/right margin
+  const int MARGIN_Y = 20;    // Top/bottom margin
+  const int SPACING_X = 30;   // Horizontal spacing between buttons
+  const int SPACING_Y = 10;   // Vertical spacing between buttons
 
-    // Calculate starting positions
-    int start_x = MARGIN_X;
-    int start_y = MARGIN_Y;
+  // Calculate starting positions
+  int start_x = MARGIN_X;
+  int start_y = MARGIN_Y;
 
-    // Create 6 buttons in 3 rows x 2 columns
-    const char* button_labels[] = {
-      "NRF24L01 Tester", "PROscore RX",
-      "HC-05 Tester", "PROscore TX",
-      "Settings", "About"
-    };
+  // Create 6 buttons in 3 rows x 2 columns
+  const char* button_labels[] = {
+    "NRF24L01\nTester", "PROscore RX",
+    "HC-05 Tester", "PROscore TX",
+    "Settings", "About"
+  };
 
-    for (int row = 0; row < 3; row++) {
-      for (int col = 0; col < 2; col++) {
-        int btn_index = row * 2 + col;
+  for (int row = 0; row < 3; row++) {
+    for (int col = 0; col < 2; col++) {
+      int btn_index = row * 2 + col;
 
-        // Calculate button position
-        int x = start_x + col * (BTN_WIDTH + SPACING_X);
-        int y = start_y + row * (BTN_HEIGHT + SPACING_Y);
+      // Calculate button position
+      int x = start_x + col * (BTN_WIDTH + SPACING_X);
+      int y = start_y + row * (BTN_HEIGHT + SPACING_Y);
 
-        // Create button
-        buttons[btn_index] = lv_button_create(scr);
-        lv_obj_set_size(buttons[btn_index], BTN_WIDTH, BTN_HEIGHT);
-        lv_obj_set_pos(buttons[btn_index], x, y);
+      // Create button
+      buttons[btn_index] = lv_button_create(scr);
+      lv_obj_set_size(buttons[btn_index], BTN_WIDTH, BTN_HEIGHT);
+      lv_obj_set_pos(buttons[btn_index], x, y);
 
-        // Add event callback with button index as user data
-        lv_obj_add_event_cb(buttons[btn_index], on_button_click,
-                            LV_EVENT_CLICKED, (void*)(intptr_t)btn_index);
+      // Style the button
+      lv_obj_set_style_bg_color(buttons[btn_index], lv_color_hex(0x0000FF), 0);                 // Normal blue
+      lv_obj_set_style_bg_color(buttons[btn_index], lv_color_hex(0x0000CC), LV_STATE_PRESSED);  // Darker blue when pressed
+      lv_obj_set_style_bg_opa(buttons[btn_index], LV_OPA_COVER, 0);
+      lv_obj_set_style_border_width(buttons[btn_index], 1, 0);
+      lv_obj_set_style_border_color(buttons[btn_index], lv_color_white(), 0);
+      lv_obj_set_style_radius(buttons[btn_index], 8, 0);
 
-        // Create label for button
-        lv_obj_t* label = lv_label_create(buttons[btn_index]);
-        lv_label_set_text(label, button_labels[btn_index]);
-        lv_obj_center(label);
-      }
+      // Add event callback with button index as user data
+      lv_obj_add_event_cb(buttons[btn_index], on_button_click,
+                          LV_EVENT_CLICKED, (void*)(intptr_t)btn_index);
+
+      // Create label for button
+      lv_obj_t* label = lv_label_create(buttons[btn_index]);
+      lv_label_set_text(label, button_labels[btn_index]);
+      lv_obj_center(label);
     }
+  }
 
-    // Status label at the bottom
-    status_label = lv_label_create(scr);
-    lv_label_set_text(status_label, "PROscore EdgeLink TFT - Ready");
-    lv_obj_align(status_label, LV_ALIGN_BOTTOM_MID, 0, -5);
-    // Set smaller font for status
-    lv_obj_set_style_text_font(status_label, &lv_font_montserrat_12, 0);
+  // Status label at the bottom
+  status_label = lv_label_create(scr);
+  lv_label_set_text(status_label, "PROscore EdgeLink TFT - Ready");
+  lv_obj_align(status_label, LV_ALIGN_BOTTOM_MID, 0, -5);
+  // Set smaller font for status
+  lv_obj_set_style_text_font(status_label, &lv_font_montserrat_12, 0);
 
-    CurrentScreen_Label = lv_label_create(scr);
+  CurrentScreen_Label = lv_label_create(scr);
 
-    //PRINTING SCREEN ID
-    char hex_buffer[8];
-    snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
-    lv_label_set_text(CurrentScreen_Label, hex_buffer);
-    lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 0, 0);
-    lv_obj_set_style_text_font(CurrentScreen_Label, &lv_font_montserrat_12, 0);
+  //PRINTING SCREEN ID
+  char hex_buffer[8];
+  snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
+  lv_label_set_text(CurrentScreen_Label, hex_buffer);
+  lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 0, 0);
+  lv_obj_set_style_text_font(CurrentScreen_Label, &lv_font_montserrat_12, 0);
 }
 
 void Display_MainMenu() {
