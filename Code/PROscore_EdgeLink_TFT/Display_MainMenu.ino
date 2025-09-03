@@ -34,6 +34,8 @@ void on_button_click(lv_event_t* e) {
       break;
     case 3:  // PROscore TX
       // Handle PROscore TX screen
+      CurrentScreen = 0x4000;  // Change to PROscore TX screen
+      Display_MainMenu_Post();
       break;
     case 4:  // Settings
       // Handle Settings screen

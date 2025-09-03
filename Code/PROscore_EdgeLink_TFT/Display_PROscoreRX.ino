@@ -5,6 +5,11 @@ static void CloseIcon_Clicked(lv_event_t* e) {
   Display_PROscoreRX_Post();
 }
 
+static void SettingsIcon_Clicked(lv_event_t* e) {
+  CurrentScreen = 0x0001;
+  Display_PROscoreRX_Post();
+}
+
 // Helper function to create and style labels - reduces code duplication
 static lv_obj_t* create_label(lv_obj_t* parent, const char* text, const lv_font_t* font, lv_color_t color) {
   lv_obj_t* label = lv_label_create(parent);
@@ -18,7 +23,7 @@ void Display_PROscoreRX() {
   if (!Display_PROscoreRX_Init) {
     ClearScreen();
     lv_obj_t* scr = lv_screen_active();
-    
+
     // Set screen background
     lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0);
     lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
@@ -30,16 +35,28 @@ void Display_PROscoreRX() {
     lv_obj_add_event_cb(Icon_Close_Label, CloseIcon_Clicked, LV_EVENT_CLICKED, NULL);
 
     // WiFi icon
-    lv_obj_t* icon_label = create_label(scr, LV_SYMBOL_WIFI, &lv_font_montserrat_16, lv_color_hex(0x00FF00));
-    lv_obj_align(icon_label, LV_ALIGN_TOP_RIGHT, -5, 5);
+    lv_obj_t* Icon_WIFI_Label = create_label(scr, LV_SYMBOL_WIFI, &lv_font_montserrat_16, lv_color_hex(0x00FF00));
+    lv_obj_align(Icon_WIFI_Label, LV_ALIGN_TOP_RIGHT, -5, 5);
+
+    //Settings Icon
+    lv_obj_t* Icon_Settings_Label = create_label(scr, LV_SYMBOL_SETTINGS, &lv_font_montserrat_24, lv_palette_main(LV_PALETTE_GREY));
+    lv_obj_align(Icon_Settings_Label, LV_ALIGN_BOTTOM_MID, 0, -70);
+    lv_obj_add_flag(Icon_Settings_Label, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(Icon_Settings_Label, SettingsIcon_Clicked, LV_EVENT_CLICKED, NULL);
 
     // Initialize game values
-    GameTime_Minute = 10; GameTime_Second = 0; GameTime_Millis = 0;
+    GameTime_Minute = 10;
+    GameTime_Second = 0;
+    GameTime_Millis = 0;
     Period = 3;
-    ShotClock_Second = 24; ShotClock_Millis = 0;
-    HomeScore = 20; GuestScore = 20;
-    HomeFoul = 4; GuestFoul = 3;
-    HomeTOut = 2; GuestTOut = 3;
+    ShotClock_Second = 24;
+    ShotClock_Millis = 0;
+    HomeScore = 20;
+    GuestScore = 20;
+    HomeFoul = 4;
+    GuestFoul = 3;
+    HomeTOut = 2;
+    GuestTOut = 3;
 
     // Game time Section
     lv_obj_t* Label_GameTime_Text = create_label(scr, "GAME TIME", &lv_font_montserrat_18, lv_color_white());
@@ -69,7 +86,8 @@ void Display_PROscoreRX() {
     char STR_HomeScore[6];
     snprintf(STR_HomeScore, sizeof(STR_HomeScore), "%d", HomeScore);
     lv_obj_t* Label_HomeScore = create_label(scr, STR_HomeScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
-    uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25 : 30;
+    uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25
+                                                                      : 30;
     lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, Margin_HomeScore, 0);
 
     // Guest team
