@@ -70,7 +70,11 @@ void Display_PROscoreRX_PRE() {
   lv_obj_align(Label_GameTime_Text, LV_ALIGN_TOP_MID, 5, 5);
 
   char time_str[8];
-  snprintf(time_str, sizeof(time_str), "%02d:%02d.%d", GameTime_Minute, GameTime_Second, GameTime_Millis);
+  if (HasMillis) {
+    snprintf(time_str, sizeof(time_str), "%02d:%02d.%d", GameTime_Minute, GameTime_Second, GameTime_Millis);
+  } else {
+    snprintf(time_str, sizeof(time_str), "%02d:%02d", GameTime_Minute, GameTime_Second);
+  }
   lv_obj_t* Label_GameTime = create_label(scr, time_str, &lv_font_montserrat_48, lv_color_hex(0xFF8C00));
   lv_obj_align(Label_GameTime, LV_ALIGN_TOP_MID, 0, 20);
 
@@ -80,7 +84,11 @@ void Display_PROscoreRX_PRE() {
   lv_obj_align(Label_ShotClock_Text, LV_ALIGN_CENTER, 0, -30);
 
   char STR_ShotClock[6];
-  snprintf(STR_ShotClock, sizeof(STR_ShotClock), "%d.%d", ShotClock_Second, ShotClock_Millis);
+  if (HasMillis) {
+    snprintf(STR_ShotClock, sizeof(STR_ShotClock), "%d.%d", ShotClock_Second, ShotClock_Millis);
+  } else {
+    snprintf(STR_ShotClock, sizeof(STR_ShotClock), "%d", ShotClock_Second);
+  }
   lv_obj_t* Label_ShotClock = create_label(scr, STR_ShotClock, &lv_font_montserrat_48, lv_color_hex(0x00FF00));
   lv_obj_align(Label_ShotClock, LV_ALIGN_CENTER, 0, 0);
   lv_obj_set_style_text_align(Label_ShotClock, LV_TEXT_ALIGN_CENTER, 0);
@@ -106,42 +114,64 @@ void Display_PROscoreRX_PRE() {
   lv_obj_t* Label_GuestScore = create_label(scr, STR_GuestScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
   lv_obj_align(Label_GuestScore, LV_ALIGN_BOTTOM_RIGHT, -12, 0);
 
-  //Foul Section
-  //Home Foul
-  lv_obj_t* Label_HomeFoul_Text = create_label(scr, "FOUL", &lv_font_montserrat_14, lv_color_white());
-  lv_obj_align(Label_HomeFoul_Text, LV_ALIGN_LEFT_MID, 12, 0);
 
-  char STR_HomeFoul[3];
-  snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
-  lv_obj_t* Label_HomeFoul = create_label(scr, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
-  lv_obj_align(Label_HomeFoul, LV_ALIGN_LEFT_MID, 18, 20);
+  if (HasTimeOut) {
+    //Foul Section
+    //Home Foul
+    lv_obj_t* Label_HomeFoul_Text = create_label(scr, "FOUL", &lv_font_montserrat_14, lv_color_white());
+    lv_obj_align(Label_HomeFoul_Text, LV_ALIGN_LEFT_MID, 12, 0);
 
-  //Guest Foul
-  lv_obj_t* Label_GuestFoul_Text = create_label(scr, "FOUL", &lv_font_montserrat_14, lv_color_white());
-  lv_obj_align(Label_GuestFoul_Text, LV_ALIGN_RIGHT_MID, -12, 0);
+    char STR_HomeFoul[3];
+    snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
+    lv_obj_t* Label_HomeFoul = create_label(scr, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    lv_obj_align(Label_HomeFoul, LV_ALIGN_LEFT_MID, 18, 24);
 
-  char STR_GuestFoul[3];
-  snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
-  lv_obj_t* Label_GuestFoul = create_label(scr, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
-  lv_obj_align(Label_GuestFoul, LV_ALIGN_RIGHT_MID, -18, 20);
+    //Guest Foul
+    lv_obj_t* Label_GuestFoul_Text = create_label(scr, "FOUL", &lv_font_montserrat_14, lv_color_white());
+    lv_obj_align(Label_GuestFoul_Text, LV_ALIGN_RIGHT_MID, -12, 0);
 
-  //Time Out Section
-  lv_obj_t* Label_TimeOut_Text = create_label(scr, "T.OUT", &lv_font_montserrat_14, lv_color_white());
-  lv_obj_align(Label_TimeOut_Text, LV_ALIGN_LEFT_MID, 12, -60);
+    char STR_GuestFoul[3];
+    snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
+    lv_obj_t* Label_GuestFoul = create_label(scr, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    lv_obj_align(Label_GuestFoul, LV_ALIGN_RIGHT_MID, -18, 24);
 
-  char STR_TimeOut[3];
-  snprintf(STR_TimeOut, sizeof(STR_TimeOut), "%d", HomeTOut);
-  lv_obj_t* Label_TimeOut = create_label(scr, STR_TimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
-  lv_obj_align(Label_TimeOut, LV_ALIGN_LEFT_MID, 18, -40);
+    //Time Out Section
+    lv_obj_t* Label_TimeOut_Text = create_label(scr, "T.OUT", &lv_font_montserrat_14, lv_color_white());
+    lv_obj_align(Label_TimeOut_Text, LV_ALIGN_LEFT_MID, 12, -60);
 
-  //Guest Time Out
-  lv_obj_t* Label_GuestTimeOut_Text = create_label(scr, "T.OUT", &lv_font_montserrat_14, lv_color_white());
-  lv_obj_align(Label_GuestTimeOut_Text, LV_ALIGN_RIGHT_MID, -12, -60);
+    char STR_TimeOut[3];
+    snprintf(STR_TimeOut, sizeof(STR_TimeOut), "%d", HomeTOut);
+    lv_obj_t* Label_TimeOut = create_label(scr, STR_TimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
+    lv_obj_align(Label_TimeOut, LV_ALIGN_LEFT_MID, 18, -36);
 
-  char STR_GuestTimeOut[3];
-  snprintf(STR_GuestTimeOut, sizeof(STR_GuestTimeOut), "%d", GuestTOut);
-  lv_obj_t* Label_GuestTimeOut = create_label(scr, STR_GuestTimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
-  lv_obj_align(Label_GuestTimeOut, LV_ALIGN_RIGHT_MID, -18, -40);
+    //Guest Time Out
+    lv_obj_t* Label_GuestTimeOut_Text = create_label(scr, "T.OUT", &lv_font_montserrat_14, lv_color_white());
+    lv_obj_align(Label_GuestTimeOut_Text, LV_ALIGN_RIGHT_MID, -12, -60);
+
+    char STR_GuestTimeOut[3];
+    snprintf(STR_GuestTimeOut, sizeof(STR_GuestTimeOut), "%d", GuestTOut);
+    lv_obj_t* Label_GuestTimeOut = create_label(scr, STR_GuestTimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
+    lv_obj_align(Label_GuestTimeOut, LV_ALIGN_RIGHT_MID, -18, -36);
+  } else {
+    //Foul Section
+    //Home Foul
+    lv_obj_t* Label_HomeFoul_Text = create_label(scr, "FOUL", &lv_font_montserrat_14, lv_color_white());
+    lv_obj_align(Label_HomeFoul_Text, LV_ALIGN_LEFT_MID, 12, -18);
+
+    char STR_HomeFoul[3];
+    snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
+    lv_obj_t* Label_HomeFoul = create_label(scr, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    lv_obj_align(Label_HomeFoul, LV_ALIGN_LEFT_MID, 18, 6);
+
+    //Guest Foul
+    lv_obj_t* Label_GuestFoul_Text = create_label(scr, "FOUL", &lv_font_montserrat_14, lv_color_white());
+    lv_obj_align(Label_GuestFoul_Text, LV_ALIGN_RIGHT_MID, -12, -18);
+
+    char STR_GuestFoul[3];
+    snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
+    lv_obj_t* Label_GuestFoul = create_label(scr, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    lv_obj_align(Label_GuestFoul, LV_ALIGN_RIGHT_MID, -18, 6);
+  }
 
   // Period Section
   lv_obj_t* Label_Period_Text = create_label(scr, "QTR", &lv_font_montserrat_14, lv_color_white());
