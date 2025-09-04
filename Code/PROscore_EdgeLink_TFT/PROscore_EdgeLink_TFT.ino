@@ -113,6 +113,10 @@ static lv_obj_t* SCR_PROscoreRX;
 static lv_obj_t* SCR_PROscoreRX_Settings;
 static lv_obj_t* SCR_About;
 
+//LV Variables
+lv_obj_t* Icon_WIFI_Label = NULL;
+bool last_NRF24L01_state = false;  // Track last state to detect changes
+
 static void CloseIcon_Clicked(lv_event_t* e) {
   switch (CurrentScreenID) {
     case 0x1000:  //NRF24L01Tester
@@ -180,14 +184,21 @@ void setup() {
 }
 
 void loop() {
+  // Check NRF24L01 status
   if(radio.available()){
-    NRF24L01_DataReceived=true;
-    Serial.println("Data received from NRF24L01");
-  }else{
-    NRF24L01_DataReceived=false;
+    NRF24L01_DataReceived = true;
+  } else {
+    NRF24L01_DataReceived = false;
+  }
+  
+  // Only update WiFi icon if we're on the PROscoreRX screen (more efficient)
+  if (CurrentScreenID == 0x2000) {
+    update_wifi_icon_realtime();
   }
   
   Display_MainMenu();
-  lv_task_handler();  // let the GUI do its work
-  lv_tick_inc(5);     // tell LVGL how much time has passed
+
+  lv_task_handler();
+  lv_tick_inc(5);
+  delayMicroseconds(3);
 }

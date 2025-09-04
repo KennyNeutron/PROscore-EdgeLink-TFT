@@ -32,9 +32,13 @@ void Display_PROscoreRX_PRE(void) {
   lv_obj_add_event_cb(Icon_Close_Label, CloseIcon_Clicked, LV_EVENT_CLICKED, NULL);
 
   // WiFi icon
+  // WiFi icon - store reference globally for real-time updates
   lv_color_t wifi_color = NRF24L01_DataReceived ? lv_color_hex(0x00FF00) : lv_color_hex(0xFF0000);
-  lv_obj_t* Icon_WIFI_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_WIFI, &lv_font_montserrat_16, wifi_color);
+  Icon_WIFI_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_WIFI, &lv_font_montserrat_16, wifi_color);
   lv_obj_align(Icon_WIFI_Label, LV_ALIGN_TOP_RIGHT, -5, 5);
+
+  // Initialize the last state
+  last_NRF24L01_state = NRF24L01_DataReceived;
 
   //Settings Icon
   lv_obj_t* Icon_Settings_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_SETTINGS, &lv_font_montserrat_30, lv_palette_main(LV_PALETTE_GREY));
@@ -212,4 +216,22 @@ void Display_PROscoreRX() {
 
 void Display_PROscoreRX_POST() {
   Display_PROscoreRX_Init = false;
+  Icon_WIFI_Label = NULL; // Clear the reference
+  last_NRF24L01_state = false; // Reset state tracker
+}
+
+// Real-time WiFi icon color update function
+void update_wifi_icon_realtime() {
+  // Only update if we're on PROscoreRX screen and icon exists
+  if (CurrentScreenID == 0x2000 && Icon_WIFI_Label != NULL) {
+    // Check if NRF24L01 status has changed
+    if (NRF24L01_DataReceived != last_NRF24L01_state) {
+      lv_color_t new_color = NRF24L01_DataReceived ? lv_color_hex(0x00FF00) : lv_color_hex(0xFF0000);
+      lv_obj_set_style_text_color(Icon_WIFI_Label, new_color, LV_PART_MAIN);
+      last_NRF24L01_state = NRF24L01_DataReceived; // Update last state
+      
+      // Optional: Serial feedback for debugging
+      Serial.println(NRF24L01_DataReceived ? "WiFi icon: GREEN (Data received)" : "WiFi icon: RED (No data)");
+    }
+  }
 }
