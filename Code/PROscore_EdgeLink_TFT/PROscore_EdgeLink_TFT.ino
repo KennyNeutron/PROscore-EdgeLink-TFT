@@ -118,6 +118,12 @@ static lv_obj_t* SCR_About;
 lv_obj_t* Icon_WIFI_Label = NULL;
 lv_obj_t* Label_ShotClock = NULL;
 lv_obj_t* Label_GameTime = NULL;
+lv_obj_t* Label_HomeScore = NULL;
+lv_obj_t* Label_GuestScore = NULL;
+lv_obj_t* Label_HomeFoul = NULL;
+lv_obj_t* Label_GuestFoul = NULL;
+lv_obj_t* Label_HomeTOut = NULL;
+lv_obj_t* Label_GuestTOut = NULL;
 
 //State tracking variables
 bool last_NRF24L01_state = false;  // Track last state to detect changes
@@ -129,7 +135,19 @@ int last_ShotClock_Millis = -1;  // Track last ShotClock millis value (-1 means 
 //GameTime tracking variables
 int last_GameTime_Minute = -1;  // Track last GameTime minute value (-1 means uninitialized)
 int last_GameTime_Second = -1;  // Track last GameTime second value (-1 means uninitialized)
-int last_GameTime_Millis = -1;  // Track last GameTime millis value (-
+int last_GameTime_Millis = -1;  // Track last GameTime millis value (-1 means uninitialized)
+
+//Score tracking variables
+int last_HomeScore = -1;   // Track last HomeScore value (-1 means uninitialized)
+int last_GuestScore = -1;  // Track last GuestScore value (-1 means uninitialized)
+
+//Foul tracking variables
+int last_HomeFoul = -1;   // Track last HomeFoul value (-1 means uninitialized)
+int last_GuestFoul = -1;  // Track last GuestFoul value (-1 means uninitialized)
+
+//Timeout tracking variables
+int last_HomeTOut = -1;   // Track last HomeTOut value (-1 means uninitialized)
+int last_GuestTOut = -1;  // Track last GuestTOut value (-1 means uninitialized)
 
 static void CloseIcon_Clicked(lv_event_t* e) {
   switch (CurrentScreenID) {
@@ -213,6 +231,9 @@ void loop() {
     update_wifi_icon_realtime();
     update_shotclock_realtime();
     update_gametime_realtime();
+    update_scores_realtime();
+    update_fouls_realtime();
+    update_timeouts_realtime();
   }
 
   Display_MainMenu();

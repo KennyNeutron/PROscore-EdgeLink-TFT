@@ -70,7 +70,7 @@ void Display_PROscoreRX_PRE(void) {
   } else {
     snprintf(time_str, sizeof(time_str), "%02d:%02d", GameTime_Minute, GameTime_Second);
   }
-  
+
   // Store reference globally for real-time updates
   Label_GameTime = create_label(SCR_PROscoreRX, time_str, &lv_font_montserrat_48, lv_color_hex(0xFF8C00));
   lv_obj_align(Label_GameTime, LV_ALIGN_TOP_MID, 0, 20);
@@ -108,7 +108,8 @@ void Display_PROscoreRX_PRE(void) {
 
   char STR_HomeScore[6];
   snprintf(STR_HomeScore, sizeof(STR_HomeScore), "%d", HomeScore);
-  lv_obj_t* Label_HomeScore = create_label(SCR_PROscoreRX, STR_HomeScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
+  // Store reference globally for real-time updates
+  Label_HomeScore = create_label(SCR_PROscoreRX, STR_HomeScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
   uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25
                                                                     : 30;
   lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, Margin_HomeScore, 0);
@@ -119,8 +120,13 @@ void Display_PROscoreRX_PRE(void) {
 
   char STR_GuestScore[6];
   snprintf(STR_GuestScore, sizeof(STR_GuestScore), "%d", GuestScore);
-  lv_obj_t* Label_GuestScore = create_label(SCR_PROscoreRX, STR_GuestScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
+  // Store reference globally for real-time updates
+  Label_GuestScore = create_label(SCR_PROscoreRX, STR_GuestScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
   lv_obj_align(Label_GuestScore, LV_ALIGN_BOTTOM_RIGHT, -12, 0);
+
+  // Initialize score tracking
+  last_HomeScore = HomeScore;
+  last_GuestScore = GuestScore;
 
 
   if (HasTimeOut) {
@@ -131,7 +137,8 @@ void Display_PROscoreRX_PRE(void) {
 
     char STR_HomeFoul[3];
     snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
-    lv_obj_t* Label_HomeFoul = create_label(SCR_PROscoreRX, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    // Store reference globally for real-time updates
+    Label_HomeFoul = create_label(SCR_PROscoreRX, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
     lv_obj_align(Label_HomeFoul, LV_ALIGN_LEFT_MID, 18, 24);
 
     //Guest Foul
@@ -140,7 +147,8 @@ void Display_PROscoreRX_PRE(void) {
 
     char STR_GuestFoul[3];
     snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
-    lv_obj_t* Label_GuestFoul = create_label(SCR_PROscoreRX, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    // Store reference globally for real-time updates
+    Label_GuestFoul = create_label(SCR_PROscoreRX, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
     lv_obj_align(Label_GuestFoul, LV_ALIGN_RIGHT_MID, -18, 24);
 
     //Time Out Section
@@ -149,8 +157,9 @@ void Display_PROscoreRX_PRE(void) {
 
     char STR_TimeOut[3];
     snprintf(STR_TimeOut, sizeof(STR_TimeOut), "%d", HomeTOut);
-    lv_obj_t* Label_TimeOut = create_label(SCR_PROscoreRX, STR_TimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
-    lv_obj_align(Label_TimeOut, LV_ALIGN_LEFT_MID, 18, -36);
+    // Store reference globally for real-time updates
+    Label_HomeTOut = create_label(SCR_PROscoreRX, STR_TimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
+    lv_obj_align(Label_HomeTOut, LV_ALIGN_LEFT_MID, 18, -36);
 
     //Guest Time Out
     lv_obj_t* Label_GuestTimeOut_Text = create_label(SCR_PROscoreRX, "T.OUT", &lv_font_montserrat_14, lv_color_white());
@@ -158,17 +167,26 @@ void Display_PROscoreRX_PRE(void) {
 
     char STR_GuestTimeOut[3];
     snprintf(STR_GuestTimeOut, sizeof(STR_GuestTimeOut), "%d", GuestTOut);
-    lv_obj_t* Label_GuestTimeOut = create_label(SCR_PROscoreRX, STR_GuestTimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
-    lv_obj_align(Label_GuestTimeOut, LV_ALIGN_RIGHT_MID, -18, -36);
+    // Store reference globally for real-time updates
+    Label_GuestTOut = create_label(SCR_PROscoreRX, STR_GuestTimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
+    lv_obj_align(Label_GuestTOut, LV_ALIGN_RIGHT_MID, -18, -36);
+
+    // Initialize foul and timeout tracking
+    last_HomeFoul = HomeFoul;
+    last_GuestFoul = GuestFoul;
+    last_HomeTOut = HomeTOut;
+    last_GuestTOut = GuestTOut;
+
   } else {
-    //Foul Section
+    //Foul Section (no timeout case)
     //Home Foul
     lv_obj_t* Label_HomeFoul_Text = create_label(SCR_PROscoreRX, "FOUL", &lv_font_montserrat_14, lv_color_white());
     lv_obj_align(Label_HomeFoul_Text, LV_ALIGN_LEFT_MID, 12, -18);
 
     char STR_HomeFoul[3];
     snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
-    lv_obj_t* Label_HomeFoul = create_label(SCR_PROscoreRX, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    // Store reference globally for real-time updates
+    Label_HomeFoul = create_label(SCR_PROscoreRX, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
     lv_obj_align(Label_HomeFoul, LV_ALIGN_LEFT_MID, 18, 6);
 
     //Guest Foul
@@ -177,9 +195,19 @@ void Display_PROscoreRX_PRE(void) {
 
     char STR_GuestFoul[3];
     snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
-    lv_obj_t* Label_GuestFoul = create_label(SCR_PROscoreRX, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    // Store reference globally for real-time updates
+    Label_GuestFoul = create_label(SCR_PROscoreRX, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
     lv_obj_align(Label_GuestFoul, LV_ALIGN_RIGHT_MID, -18, 6);
+
+    // Initialize foul tracking (no timeout in this case)
+    last_HomeFoul = HomeFoul;
+    last_GuestFoul = GuestFoul;
+    Label_HomeTOut = NULL;   // Set to NULL when not used
+    Label_GuestTOut = NULL;  // Set to NULL when not used
+    last_HomeTOut = -1;
+    last_GuestTOut = -1;
   }
+
 
   // Period Section
   lv_obj_t* Label_Period_Text = create_label(SCR_PROscoreRX, "QTR", &lv_font_montserrat_14, lv_color_white());
@@ -229,14 +257,24 @@ void Display_PROscoreRX() {
 
 void Display_PROscoreRX_POST() {
   Display_PROscoreRX_Init = false;
-  Icon_WIFI_Label = NULL;       // Clear the reference
-  Label_ShotClock = NULL;       // Clear ShotClock reference
+
+  //Clear Label References
+  Icon_WIFI_Label = NULL;  // Clear the reference
+  Label_ShotClock = NULL;  // Clear ShotClock reference
+
+  //Reset State Trackers
   last_NRF24L01_state = false;  // Reset state tracker
   last_ShotClock_Second = -1;   // Reset ShotClock state tracker
   last_ShotClock_Millis = -1;   // Reset ShotClock state tracker
-  last_GameTime_Minute = -1;   // Reset GameTime minute tracker
-  last_GameTime_Second = -1;   // Reset GameTime second tracker
-  last_GameTime_Millis = -1;   // Reset GameTime millis tracker
+  last_GameTime_Minute = -1;    // Reset GameTime minute tracker
+  last_GameTime_Second = -1;    // Reset GameTime second tracker
+  last_GameTime_Millis = -1;    // Reset GameTime millis tracker
+  last_HomeScore = -1;          // Reset HomeScore tracker
+  last_GuestScore = -1;         // Reset GuestScore tracker
+  last_HomeFoul = -1;           // Reset HomeFoul tracker
+  last_GuestFoul = -1;          // Reset GuestFoul tracker
+  last_HomeTOut = -1;           // Reset HomeTOut tracker
+  last_GuestTOut = -1;          // Reset GuestTOut tracker
 }
 
 // Real-time WiFi icon color update function
@@ -260,24 +298,23 @@ void update_wifi_icon_realtime() {
 void update_shotclock_realtime() {
   // Only update if we're on PROscoreRX screen and label exists
   if (CurrentScreenID == 0x2000 && Label_ShotClock != NULL) {
-    
+
     // Check if the label object is still valid (safety check)
     if (!lv_obj_is_valid(Label_ShotClock)) {
       Label_ShotClock = NULL;
       return;
     }
-    
+
     // Determine which values to check based on HasMillis setting
     bool values_changed = false;
     if (HasMillis) {
       // Check both seconds and milliseconds when HasMillis is true
-      values_changed = (ShotClock_Second != last_ShotClock_Second || 
-                       ShotClock_Millis != last_ShotClock_Millis);
+      values_changed = (ShotClock_Second != last_ShotClock_Second || ShotClock_Millis != last_ShotClock_Millis);
     } else {
       // Only check seconds when HasMillis is false (more efficient)
       values_changed = (ShotClock_Second != last_ShotClock_Second);
     }
-    
+
     // Only proceed if values actually changed
     if (values_changed) {
       char STR_ShotClock[6];
@@ -303,26 +340,23 @@ void update_shotclock_realtime() {
 void update_gametime_realtime() {
   // Only update if we're on PROscoreRX screen and label exists
   if (CurrentScreenID == 0x2000 && Label_GameTime != NULL) {
-    
+
     // Check if the label object is still valid (safety check)
     if (!lv_obj_is_valid(Label_GameTime)) {
       Label_GameTime = NULL;
       return;
     }
-    
+
     // Determine which values to check based on HasMillis setting
     bool values_changed = false;
     if (HasMillis) {
       // Check minute, second, and milliseconds when HasMillis is true
-      values_changed = (GameTime_Minute != last_GameTime_Minute || 
-                       GameTime_Second != last_GameTime_Second ||
-                       GameTime_Millis != last_GameTime_Millis);
+      values_changed = (GameTime_Minute != last_GameTime_Minute || GameTime_Second != last_GameTime_Second || GameTime_Millis != last_GameTime_Millis);
     } else {
       // Only check minute and second when HasMillis is false
-      values_changed = (GameTime_Minute != last_GameTime_Minute || 
-                       GameTime_Second != last_GameTime_Second);
+      values_changed = (GameTime_Minute != last_GameTime_Minute || GameTime_Second != last_GameTime_Second);
     }
-    
+
     // Only proceed if values actually changed
     if (values_changed) {
       char time_str[8];
@@ -341,6 +375,74 @@ void update_gametime_realtime() {
       if (HasMillis) {
         last_GameTime_Millis = GameTime_Millis;
       }
+    }
+  }
+}
+
+// Real-time Scores update function
+void update_scores_realtime() {
+  if (CurrentScreenID == 0x2000) {
+    // Update Home Score
+    if (Label_HomeScore != NULL && lv_obj_is_valid(Label_HomeScore) && HomeScore != last_HomeScore) {
+      char STR_HomeScore[6];
+      snprintf(STR_HomeScore, sizeof(STR_HomeScore), "%d", HomeScore);
+      lv_label_set_text(Label_HomeScore, STR_HomeScore);
+      
+      // Update alignment based on score digits (same logic as original)
+      uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25 : 30;
+      lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, Margin_HomeScore, 0);
+      
+      last_HomeScore = HomeScore;
+    }
+    
+    // Update Guest Score
+    if (Label_GuestScore != NULL && lv_obj_is_valid(Label_GuestScore) && GuestScore != last_GuestScore) {
+      char STR_GuestScore[6];
+      snprintf(STR_GuestScore, sizeof(STR_GuestScore), "%d", GuestScore);
+      lv_label_set_text(Label_GuestScore, STR_GuestScore);
+      last_GuestScore = GuestScore;
+    }
+  }
+}
+
+// Real-time Fouls update function  
+void update_fouls_realtime() {
+  if (CurrentScreenID == 0x2000) {
+    // Update Home Foul
+    if (Label_HomeFoul != NULL && lv_obj_is_valid(Label_HomeFoul) && HomeFoul != last_HomeFoul) {
+      char STR_HomeFoul[3];
+      snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
+      lv_label_set_text(Label_HomeFoul, STR_HomeFoul);
+      last_HomeFoul = HomeFoul;
+    }
+    
+    // Update Guest Foul
+    if (Label_GuestFoul != NULL && lv_obj_is_valid(Label_GuestFoul) && GuestFoul != last_GuestFoul) {
+      char STR_GuestFoul[3];
+      snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
+      lv_label_set_text(Label_GuestFoul, STR_GuestFoul);
+      last_GuestFoul = GuestFoul;
+    }
+  }
+}
+
+// Real-time TimeOuts update function
+void update_timeouts_realtime() {
+  if (CurrentScreenID == 0x2000 && HasTimeOut) {  // Only when timeouts are enabled
+    // Update Home TimeOut
+    if (Label_HomeTOut != NULL && lv_obj_is_valid(Label_HomeTOut) && HomeTOut != last_HomeTOut) {
+      char STR_HomeTimeOut[3];
+      snprintf(STR_HomeTimeOut, sizeof(STR_HomeTimeOut), "%d", HomeTOut);
+      lv_label_set_text(Label_HomeTOut, STR_HomeTimeOut);
+      last_HomeTOut = HomeTOut;
+    }
+    
+    // Update Guest TimeOut
+    if (Label_GuestTOut != NULL && lv_obj_is_valid(Label_GuestTOut) && GuestTOut != last_GuestTOut) {
+      char STR_GuestTimeOut[3];
+      snprintf(STR_GuestTimeOut, sizeof(STR_GuestTimeOut), "%d", GuestTOut);
+      lv_label_set_text(Label_GuestTOut, STR_GuestTimeOut);
+      last_GuestTOut = GuestTOut;
     }
   }
 }

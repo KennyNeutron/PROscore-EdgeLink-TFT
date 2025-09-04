@@ -35,7 +35,6 @@ void on_button_click(lv_event_t* e) {
       lv_obj_del(SCR_CurrentScreen);
       Display_PROscoreRX_POST();
       Display_PROscoreRX();
-      // Display_MainMenu_POST();
       break;
     case 2:  // HC-05 Tester
       // Handle HC-05 Tester screen
