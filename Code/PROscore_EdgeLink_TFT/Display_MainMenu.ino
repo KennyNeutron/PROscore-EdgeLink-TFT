@@ -1,6 +1,10 @@
+static lv_obj_t* SCR_MainMenu;
+
+
 // Global variables to hold buttons and status label
 lv_obj_t* buttons[6];
 lv_obj_t* status_label;
+
 
 bool Display_MainMenu_Init = false;
 
@@ -25,6 +29,8 @@ void on_button_click(lv_event_t* e) {
   switch (btn_index) {
     case 0:  // NRF24L01 Tester
       // Handle NRF24L01 Tester screen
+      lv_obj_del(SCR_CurrentScreen);
+      Display_NRF24L01Tester();
       break;
     case 1:  // PROscore RX
       // Handle PROscore RX screen
@@ -50,14 +56,18 @@ void on_button_click(lv_event_t* e) {
   }
 }
 
-void Display_MainMenu_PRE() {
+void Display_MainMenu_PRE(void) {
 
-  ClearScreen();
+  SCR_MainMenu = lv_obj_create(NULL);
+  lv_scr_load(SCR_MainMenu);
 
-  lv_obj_t* scr = lv_screen_active();
+  lv_obj_set_style_bg_color(SCR_MainMenu, lv_color_hex(0x000000), 0);
+  lv_obj_set_style_bg_opa(SCR_MainMenu, LV_OPA_COVER, 0);
 
-  lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0);
-  lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+  lv_obj_t* id_label = create_label(SCR_MainMenu, "MainMenu", &lv_font_montserrat_12, lv_color_white());
+  lv_obj_align(id_label, LV_ALIGN_TOP_LEFT, 0, 0);
+
+  SCR_CurrentScreen = SCR_MainMenu;
 
   // Display dimensions in landscape: 320x240
   const int DISPLAY_WIDTH = 320;
@@ -91,7 +101,7 @@ void Display_MainMenu_PRE() {
       int y = start_y + row * (BTN_HEIGHT + SPACING_Y);
 
       // Create button
-      buttons[btn_index] = lv_button_create(scr);
+      buttons[btn_index] = lv_button_create(SCR_MainMenu);
       lv_obj_set_size(buttons[btn_index], BTN_WIDTH, BTN_HEIGHT);
       lv_obj_set_pos(buttons[btn_index], x, y);
 
@@ -115,20 +125,11 @@ void Display_MainMenu_PRE() {
   }
 
   // Status label at the bottom
-  status_label = lv_label_create(scr);
+  status_label = lv_label_create(SCR_MainMenu);
   lv_label_set_text(status_label, "PROscore EdgeLink TFT - Ready");
   lv_obj_align(status_label, LV_ALIGN_BOTTOM_MID, 0, -5);
   // Set smaller font for status
   lv_obj_set_style_text_font(status_label, &lv_font_montserrat_12, 0);
-
-  CurrentScreen_Label = lv_label_create(scr);
-
-  //PRINTING SCREEN ID
-  char hex_buffer[8];
-  snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
-  lv_label_set_text(CurrentScreen_Label, hex_buffer);
-  lv_obj_align(CurrentScreen_Label, LV_ALIGN_TOP_LEFT, 0, 0);
-  lv_obj_set_style_text_font(CurrentScreen_Label, &lv_font_montserrat_12, 0);
 }
 
 void Display_MainMenu() {
@@ -137,7 +138,6 @@ void Display_MainMenu() {
     Display_MainMenu_Init = true;
   }
 }
-
 
 void Display_MainMenu_POST() {
   Display_MainMenu_Init = false;

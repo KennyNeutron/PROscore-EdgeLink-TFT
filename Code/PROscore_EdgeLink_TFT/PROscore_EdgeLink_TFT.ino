@@ -57,6 +57,7 @@ int x, y, z;
 uint32_t draw_buf[DRAW_BUF_SIZE / 4];
 
 lv_obj_t* CurrentScreen_Label;
+lv_obj_t* SCR_CurrentScreen;
 
 // If logging is enabled, it will inform the user about what is happening in the library
 void log_print(lv_log_level_t level, const char* buf) {
@@ -141,7 +142,7 @@ void setup() {
 
 void loop() {
   //Display();
-  Display_NRF24L01Tester();
+  Display_MainMenu();
   lv_task_handler();  // let the GUI do its work
   lv_tick_inc(5);     // tell LVGL how much time has passed
   delay(5);           // let this time pass
