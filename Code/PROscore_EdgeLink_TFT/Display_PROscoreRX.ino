@@ -26,8 +26,8 @@ void Display_PROscoreRX_PRE(void) {
   SCR_CurrentScreen = SCR_PROscoreRX;
 
   // Close icon
-  lv_obj_t* Icon_Close_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_CLOSE, &lv_font_montserrat_20, lv_color_white());
-  lv_obj_align(Icon_Close_Label, LV_ALIGN_TOP_LEFT, 5, 5);
+  lv_obj_t* Icon_Close_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_CLOSE, &lv_font_montserrat_32, lv_color_white());
+  lv_obj_align(Icon_Close_Label, LV_ALIGN_TOP_LEFT, 0, 0);
   lv_obj_add_flag(Icon_Close_Label, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(Icon_Close_Label, CloseIcon_Clicked, LV_EVENT_CLICKED, NULL);
 
