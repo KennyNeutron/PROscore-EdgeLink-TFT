@@ -104,14 +104,17 @@ static lv_obj_t* SCR_About;
 
 static void CloseIcon_Clicked(lv_event_t* e) {
   switch (CurrentScreenID) {
+    case 0x1000:  //NRF24L01Tester
+      lv_obj_del(SCR_CurrentScreen);
+      Display_MainMenu_POST();
+      Display_MainMenu();
+      break;
     case 0x2000:  //PROscoreRX
-      Serial.println("CloseIcon_Clicked from RX to MainMenu");
       lv_obj_del(SCR_CurrentScreen);
       Display_MainMenu_POST();
       Display_MainMenu();
       break;
     case 0x2100:  //PROscoreRX Settings
-      Serial.println("CloseIcon_Clicked from Settings to RX");
       lv_obj_del(SCR_CurrentScreen);
       Display_PROscoreRX_POST();
       Display_PROscoreRX();

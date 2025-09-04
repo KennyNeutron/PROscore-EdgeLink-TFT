@@ -16,7 +16,7 @@ static lv_obj_t* create_label(lv_obj_t* parent, const char* text, const lv_font_
   return label;
 }
 
-void Display_PROscoreRX_PRE() {
+void Display_PROscoreRX_PRE(void) {
   SCR_PROscoreRX = lv_obj_create(NULL);
   lv_scr_load(SCR_PROscoreRX);
 

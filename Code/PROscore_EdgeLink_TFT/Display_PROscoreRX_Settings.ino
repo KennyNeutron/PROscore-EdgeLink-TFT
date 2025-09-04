@@ -19,7 +19,7 @@ static void settings_checkbox_handler(lv_event_t* e) {
   Serial.printf("Setting '%s' is now %s\n", setting, checked ? "ON" : "OFF");
 }
 
-void Display_PROscoreRX_Settings_PRE() {
+void Display_PROscoreRX_Settings_PRE(void) {
   SCR_PROscoreRX_Settings = lv_obj_create(NULL);
   lv_scr_load(SCR_PROscoreRX_Settings);
 
@@ -62,7 +62,7 @@ void Display_PROscoreRX_Settings_PRE() {
   }
   lv_obj_add_event_cb(TOut_cb, settings_checkbox_handler, LV_EVENT_VALUE_CHANGED, (void*)"TimeOut");
 }
-void Display_PROscoreRX_Settings(void) {
+void Display_PROscoreRX_Settings() {
   if (!Display_PROscoreRX_Settings_Init) {
     CurrentScreenID = 0x2100;
     Display_PROscoreRX_Settings_PRE();

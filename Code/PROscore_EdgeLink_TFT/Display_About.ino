@@ -6,7 +6,7 @@ static void ExitButton_Clicked(lv_event_t* e) {
   Display_MainMenu_POST();
   Display_MainMenu();
 }
-void Display_About_PRE() {
+void Display_About_PRE(void) {
   SCR_About = lv_obj_create(NULL);
   lv_scr_load(SCR_About);
 
