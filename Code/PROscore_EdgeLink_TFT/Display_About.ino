@@ -1,27 +1,25 @@
 bool Display_About_Init = false;
 
-// Exit button event handler (same as CloseIcon_Clicked)
 static void ExitButton_Clicked(lv_event_t* e) {
-  // CurrentScreen = 0x0000;  // Return to main menu
-  Display_About_POST();
+  CurrentScreenID = 0x0000;
+  lv_obj_del(SCR_CurrentScreen);
+  Display_MainMenu_POST();
+  Display_MainMenu();
 }
-
 void Display_About_PRE() {
-  // ClearScreen();
-  lv_obj_t* scr = lv_screen_active();
+  SCR_About = lv_obj_create(NULL);
+  lv_scr_load(SCR_About);
 
-  // Background (dark theme as in other screens)
-  lv_obj_set_style_bg_color(scr, lv_color_hex(0x000000), 0);
-  lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+  lv_obj_set_style_bg_color(SCR_About, lv_color_hex(0x000000), 0);
+  lv_obj_set_style_bg_opa(SCR_About, LV_OPA_COVER, 0);
 
-  // Show current screen ID (top-left), consistent with other screens
-  // char hex_buffer[8];
-  // snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
-  // lv_obj_t* id_label = create_label(scr, hex_buffer, &lv_font_montserrat_12, lv_color_white());
-  // lv_obj_align(id_label, LV_ALIGN_TOP_LEFT, 0, 0);
+  SCR_CurrentScreen = SCR_About;
+
+  lv_obj_t* id_label = create_label(SCR_About, "About", &lv_font_montserrat_12, lv_color_white());
+  lv_obj_align(id_label, LV_ALIGN_TOP_LEFT, 0, 0);
 
   // Exit Button (replacing close icon)
-  lv_obj_t* exit_button = lv_button_create(scr);
+  lv_obj_t* exit_button = lv_button_create(SCR_About);
   lv_obj_set_size(exit_button, 60, 30);
   lv_obj_align(exit_button, LV_ALIGN_BOTTOM_MID, 0, 200);
 
@@ -43,11 +41,11 @@ void Display_About_PRE() {
   lv_obj_add_event_cb(exit_button, ExitButton_Clicked, LV_EVENT_CLICKED, NULL);
 
   // Title
-  lv_obj_t* title = create_label(scr, "PROscore EdgeLink TFT", &lv_font_montserrat_24, lv_color_white());
+  lv_obj_t* title = create_label(SCR_About, "PROscore EdgeLink TFT", &lv_font_montserrat_24, lv_color_white());
   lv_obj_align(title, LV_ALIGN_TOP_LEFT, 10, 18);
 
   // Subtitle
-  lv_obj_t* subtitle = create_label(scr, "Handheld Monitor / Diagnostics for PROscore\nBy: KennyNeutron", &lv_font_montserrat_12, lv_palette_main(LV_PALETTE_GREY));
+  lv_obj_t* subtitle = create_label(SCR_About, "Handheld Monitor / Diagnostics for PROscore\nBy: KennyNeutron", &lv_font_montserrat_12, lv_palette_main(LV_PALETTE_GREY));
   lv_obj_align(subtitle, LV_ALIGN_TOP_LEFT, 10, 46);
 
   // Body text (fixed characters)
@@ -61,7 +59,7 @@ void Display_About_PRE() {
     "Author: Kenny Walter Diolola (KennyNeutron)\n"
     "Repo: PROscore EdgeLink TFT\n";
 
-  lv_obj_t* body = lv_label_create(scr);
+  lv_obj_t* body = lv_label_create(SCR_About);
   lv_label_set_long_mode(body, LV_LABEL_LONG_WRAP);
   lv_obj_set_width(body, 300);  // keep left margin readable on 320-wide landscape
   lv_label_set_text(body, about_text);
@@ -72,7 +70,7 @@ void Display_About_PRE() {
   // Footer / version line (bottom-left, with space for exit button)
   char ver[48];
   snprintf(ver, sizeof(ver), "Firmware LVGL: %d.%d.%d", lv_version_major(), lv_version_minor(), lv_version_patch());
-  lv_obj_t* version = create_label(scr, ver, &lv_font_montserrat_12, lv_palette_main(LV_PALETTE_GREY));
+  lv_obj_t* version = create_label(SCR_About, ver, &lv_font_montserrat_12, lv_palette_main(LV_PALETTE_GREY));
   lv_obj_align(version, LV_ALIGN_BOTTOM_LEFT, 10, 150);
 }
 

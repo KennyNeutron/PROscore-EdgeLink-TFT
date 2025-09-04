@@ -2,7 +2,7 @@ bool Display_PROscoreRX_Init = false;
 
 
 static void SettingsIcon_Clicked(lv_event_t* e) {
-  Display_PROscoreRX_POST();
+  Display_PROscoreRX_Settings_POST();
   lv_obj_del(SCR_PROscoreRX);
   Display_PROscoreRX_Settings();
 }

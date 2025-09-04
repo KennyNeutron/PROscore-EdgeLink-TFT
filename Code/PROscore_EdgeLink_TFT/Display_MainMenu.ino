@@ -48,6 +48,9 @@ void on_button_click(lv_event_t* e) {
       break;
     case 5:  // About
       // Handle about screen
+      lv_obj_del(SCR_CurrentScreen);
+      Display_About_POST();
+      Display_About();
       break;
   }
 }

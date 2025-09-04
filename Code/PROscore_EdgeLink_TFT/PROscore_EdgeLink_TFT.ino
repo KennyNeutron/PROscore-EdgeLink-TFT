@@ -100,6 +100,7 @@ static lv_obj_t* SCR_MainMenu;
 static lv_obj_t* SCR_NRF24L01Tester;
 static lv_obj_t* SCR_PROscoreRX;
 static lv_obj_t* SCR_PROscoreRX_Settings;
+static lv_obj_t* SCR_About;
 
 static void CloseIcon_Clicked(lv_event_t* e) {
   switch (CurrentScreenID) {
