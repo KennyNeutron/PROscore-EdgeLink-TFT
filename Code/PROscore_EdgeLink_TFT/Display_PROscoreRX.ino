@@ -32,7 +32,8 @@ void Display_PROscoreRX_PRE(void) {
   lv_obj_add_event_cb(Icon_Close_Label, CloseIcon_Clicked, LV_EVENT_CLICKED, NULL);
 
   // WiFi icon
-  lv_obj_t* Icon_WIFI_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_WIFI, &lv_font_montserrat_16, lv_color_hex(0x00FF00));
+  lv_color_t wifi_color = NRF24L01_DataReceived ? lv_color_hex(0x00FF00) : lv_color_hex(0xFF0000);
+  lv_obj_t* Icon_WIFI_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_WIFI, &lv_font_montserrat_16, wifi_color);
   lv_obj_align(Icon_WIFI_Label, LV_ALIGN_TOP_RIGHT, -5, 5);
 
   //Settings Icon
@@ -45,15 +46,15 @@ void Display_PROscoreRX_PRE(void) {
   GameTime_Minute = 10;
   GameTime_Second = 0;
   GameTime_Millis = 0;
-  Period = 3;
+  Period = 1;
   ShotClock_Second = 24;
   ShotClock_Millis = 0;
-  HomeScore = 20;
-  GuestScore = 20;
-  HomeFoul = 4;
-  GuestFoul = 3;
-  HomeTOut = 2;
-  GuestTOut = 3;
+  HomeScore = 0;
+  GuestScore = 0;
+  HomeFoul = 0;
+  GuestFoul = 0;
+  HomeTOut = 0;
+  GuestTOut = 0;
 
   // Game time Section
   lv_obj_t* Label_GameTime_Text = create_label(SCR_PROscoreRX, "GAME TIME", &lv_font_montserrat_18, lv_color_white());

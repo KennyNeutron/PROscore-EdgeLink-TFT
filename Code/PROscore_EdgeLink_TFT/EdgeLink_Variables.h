@@ -24,3 +24,7 @@ bool Buzzer;
 //PROscore Settings
 bool HasMillis = false;
 bool HasTimeOut = false;
+
+//NRF24L01
+const byte address[6] = "PT001";
+bool NRF24L01_DataReceived = false;

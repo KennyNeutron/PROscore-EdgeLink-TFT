@@ -37,6 +37,17 @@
 #include <lvgl.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Touchscreen.h>
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+#include "DigitalIO.h"
+
+// NRF24L01 pins (different from TFT)
+#define NRF_CE   22
+#define NRF_CSN  27
+
+// Initialize RF24 with CE and CSN pins
+RF24 radio(NRF_CE, NRF_CSN);
 
 #define XPT2046_IRQ 36   // T_IRQ
 #define XPT2046_MOSI 32  // T_DIN
@@ -154,11 +165,29 @@ void setup() {
   lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
   // Set the callback function to read Touchscreen input
   lv_indev_set_read_cb(indev, touchscreen_read);
+
+  if(!radio.begin()) {
+    Serial.println("NRF24L01 hardware not responding!");
+  } else {
+    Serial.println("NRF24L01 initialized on custom SPI");
+    radio.printDetails(); // Optional: print radio config
+  }
+  
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setDataRate(RF24_250KBPS);
+  radio.openReadingPipe(0, address);
+  radio.startListening();
 }
 
 void loop() {
+  if(radio.available()){
+    NRF24L01_DataReceived=true;
+    Serial.println("Data received from NRF24L01");
+  }else{
+    NRF24L01_DataReceived=false;
+  }
+  
   Display_MainMenu();
   lv_task_handler();  // let the GUI do its work
   lv_tick_inc(5);     // tell LVGL how much time has passed
-  delay(5);           // let this time pass
 }
