@@ -215,8 +215,12 @@ void Display_PROscoreRX_PRE(void) {
 
   char STR_Period[3];
   snprintf(STR_Period, sizeof(STR_Period), "%d", Period);
-  lv_obj_t* Label_Period = create_label(SCR_PROscoreRX, STR_Period, &lv_font_montserrat_36, lv_color_hex(0x00FFFF));
+  // Store reference globally for real-time updates
+  Label_Period = create_label(SCR_PROscoreRX, STR_Period, &lv_font_montserrat_36, lv_color_hex(0x00FFFF));
   lv_obj_align(Label_Period, LV_ALIGN_BOTTOM_MID, 0, 0);
+
+  // Initialize period tracking
+  last_Period = Period;
 
   BallPoss = 0;
   //Ball Poss Section
@@ -259,15 +263,16 @@ void Display_PROscoreRX_POST() {
   Display_PROscoreRX_Init = false;
 
   //Clear Label References
-  Icon_WIFI_Label = NULL;  // Clear the reference
-  Label_ShotClock = NULL;  // Clear ShotClock reference
-  Label_GameTime = NULL;   // Clear GameTime reference
-  Label_HomeScore = NULL;  // Clear HomeScore reference
-  Label_GuestScore = NULL; // Clear GuestScore reference
-  Label_HomeFoul = NULL;   // Clear HomeFoul reference
-  Label_GuestFoul = NULL;  // Clear GuestFoul reference
-  Label_HomeTOut = NULL;   // Clear HomeTOut reference
-  Label_GuestTOut = NULL;  // Clear GuestTOut reference
+  Icon_WIFI_Label = NULL;   // Clear the reference
+  Label_ShotClock = NULL;   // Clear ShotClock reference
+  Label_GameTime = NULL;    // Clear GameTime reference
+  Label_HomeScore = NULL;   // Clear HomeScore reference
+  Label_GuestScore = NULL;  // Clear GuestScore reference
+  Label_HomeFoul = NULL;    // Clear HomeFoul reference
+  Label_GuestFoul = NULL;   // Clear GuestFoul reference
+  Label_HomeTOut = NULL;    // Clear HomeTOut reference
+  Label_GuestTOut = NULL;   // Clear GuestTOut reference
+  Label_Period = NULL;      // Clear Period reference
 
   //Reset State Trackers
   last_NRF24L01_state = false;  // Reset state tracker
@@ -282,6 +287,7 @@ void Display_PROscoreRX_POST() {
   last_GuestFoul = -1;          // Reset GuestFoul tracker
   last_HomeTOut = -1;           // Reset HomeTOut tracker
   last_GuestTOut = -1;          // Reset GuestTOut tracker
+  last_Period = -1;             // Reset Period tracker
 }
 
 // Real-time WiFi icon color update function
@@ -430,7 +436,7 @@ void update_fouls_realtime() {
 
     // Update Guest Foul
     if (Label_GuestFoul != NULL && lv_obj_is_valid(Label_GuestFoul) && GuestFoul != last_GuestFoul) {
-      if(GuestFoul == 10) {
+      if (GuestFoul == 10) {
         lv_label_set_text(Label_GuestFoul, "P");
       } else {
         char STR_GuestFoul[3];
@@ -459,6 +465,23 @@ void update_timeouts_realtime() {
       snprintf(STR_GuestTimeOut, sizeof(STR_GuestTimeOut), "%d", GuestTOut);
       lv_label_set_text(Label_GuestTOut, STR_GuestTimeOut);
       last_GuestTOut = GuestTOut;
+    }
+  }
+}
+
+// Real-time Period update function
+void update_period_realtime() {
+  if (CurrentScreenID == 0x2000) {
+    // Update Period
+    if (Label_Period != NULL && lv_obj_is_valid(Label_Period) && Period != last_Period) {
+      if (Period == 10) {
+        lv_label_set_text(Label_Period, "OT");
+      } else {
+        char STR_Period[3];
+        snprintf(STR_Period, sizeof(STR_Period), "%d", Period);
+        lv_label_set_text(Label_Period, STR_Period);
+      }
+      last_Period = Period;
     }
   }
 }
