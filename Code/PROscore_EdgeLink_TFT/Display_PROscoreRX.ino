@@ -261,6 +261,13 @@ void Display_PROscoreRX_POST() {
   //Clear Label References
   Icon_WIFI_Label = NULL;  // Clear the reference
   Label_ShotClock = NULL;  // Clear ShotClock reference
+  Label_GameTime = NULL;   // Clear GameTime reference
+  Label_HomeScore = NULL;  // Clear HomeScore reference
+  Label_GuestScore = NULL; // Clear GuestScore reference
+  Label_HomeFoul = NULL;   // Clear HomeFoul reference
+  Label_GuestFoul = NULL;  // Clear GuestFoul reference
+  Label_HomeTOut = NULL;   // Clear HomeTOut reference
+  Label_GuestTOut = NULL;  // Clear GuestTOut reference
 
   //Reset State Trackers
   last_NRF24L01_state = false;  // Reset state tracker
@@ -387,14 +394,15 @@ void update_scores_realtime() {
       char STR_HomeScore[6];
       snprintf(STR_HomeScore, sizeof(STR_HomeScore), "%d", HomeScore);
       lv_label_set_text(Label_HomeScore, STR_HomeScore);
-      
+
       // Update alignment based on score digits (same logic as original)
-      uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25 : 30;
+      uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25
+                                                                        : 30;
       lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, Margin_HomeScore, 0);
-      
+
       last_HomeScore = HomeScore;
     }
-    
+
     // Update Guest Score
     if (Label_GuestScore != NULL && lv_obj_is_valid(Label_GuestScore) && GuestScore != last_GuestScore) {
       char STR_GuestScore[6];
@@ -405,22 +413,30 @@ void update_scores_realtime() {
   }
 }
 
-// Real-time Fouls update function  
+// Real-time Fouls update function
 void update_fouls_realtime() {
   if (CurrentScreenID == 0x2000) {
     // Update Home Foul
     if (Label_HomeFoul != NULL && lv_obj_is_valid(Label_HomeFoul) && HomeFoul != last_HomeFoul) {
-      char STR_HomeFoul[3];
-      snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
-      lv_label_set_text(Label_HomeFoul, STR_HomeFoul);
+      if (HomeFoul == 10) {
+        lv_label_set_text(Label_HomeFoul, "P");
+      } else {
+        char STR_HomeFoul[3];
+        snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
+        lv_label_set_text(Label_HomeFoul, STR_HomeFoul);
+      }
       last_HomeFoul = HomeFoul;
     }
-    
+
     // Update Guest Foul
     if (Label_GuestFoul != NULL && lv_obj_is_valid(Label_GuestFoul) && GuestFoul != last_GuestFoul) {
-      char STR_GuestFoul[3];
-      snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
-      lv_label_set_text(Label_GuestFoul, STR_GuestFoul);
+      if(GuestFoul == 10) {
+        lv_label_set_text(Label_GuestFoul, "P");
+      } else {
+        char STR_GuestFoul[3];
+        snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
+        lv_label_set_text(Label_GuestFoul, STR_GuestFoul);
+      }
       last_GuestFoul = GuestFoul;
     }
   }
@@ -436,7 +452,7 @@ void update_timeouts_realtime() {
       lv_label_set_text(Label_HomeTOut, STR_HomeTimeOut);
       last_HomeTOut = HomeTOut;
     }
-    
+
     // Update Guest TimeOut
     if (Label_GuestTOut != NULL && lv_obj_is_valid(Label_GuestTOut) && GuestTOut != last_GuestTOut) {
       char STR_GuestTimeOut[3];
