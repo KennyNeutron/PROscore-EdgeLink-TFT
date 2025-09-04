@@ -56,7 +56,6 @@ int x, y, z;
 #define DRAW_BUF_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT / 6 * (LV_COLOR_DEPTH / 8))
 uint32_t draw_buf[DRAW_BUF_SIZE / 4];
 
-lv_obj_t* CurrentScreen_Label;
 lv_obj_t* SCR_CurrentScreen;
 
 // If logging is enabled, it will inform the user about what is happening in the library
@@ -96,15 +95,32 @@ void touchscreen_read(lv_indev_t* indev, lv_indev_data_t* data) {
   }
 }
 
+//LV Screens
+static lv_obj_t* SCR_MainMenu;
+static lv_obj_t* SCR_NRF24L01Tester;
+static lv_obj_t* SCR_PROscoreRX;
+static lv_obj_t* SCR_PROscoreRX_Settings;
 
-void ClearScreen() {
-  lv_obj_t* scr = lv_screen_active();
-  lv_obj_clean(scr);  // Deletes ALL objects on the screen at once
+static void CloseIcon_Clicked(lv_event_t* e) {
+  switch (CurrentScreenID) {
+    case 0x2000:  //PROscoreRX
+      Serial.println("CloseIcon_Clicked from RX to MainMenu");
+      lv_obj_del(SCR_CurrentScreen);
+      Display_MainMenu_POST();
+      Display_MainMenu();
+      break;
+    case 0x2100:  //PROscoreRX Settings
+      Serial.println("CloseIcon_Clicked from Settings to RX");
+      lv_obj_del(SCR_CurrentScreen);
+      Display_PROscoreRX_POST();
+      Display_PROscoreRX();
+      break;
+    default:
+      CurrentScreenID = 0x0000;
+      break;
+  }
 }
 
-void lv_create_main_gui(void) {
-  Display();
-}
 
 void setup() {
   String LVGL_Arduino = String("LVGL Library Version: ") + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
@@ -134,14 +150,9 @@ void setup() {
   lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
   // Set the callback function to read Touchscreen input
   lv_indev_set_read_cb(indev, touchscreen_read);
-
-  // Function to draw the GUI (text, buttons and sliders)
-  // lv_create_main_gui();
-  CurrentScreen=0x0000;
 }
 
 void loop() {
-  //Display();
   Display_MainMenu();
   lv_task_handler();  // let the GUI do its work
   lv_tick_inc(5);     // tell LVGL how much time has passed

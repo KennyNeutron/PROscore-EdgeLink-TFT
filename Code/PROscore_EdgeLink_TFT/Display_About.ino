@@ -2,12 +2,12 @@ bool Display_About_Init = false;
 
 // Exit button event handler (same as CloseIcon_Clicked)
 static void ExitButton_Clicked(lv_event_t* e) {
-  CurrentScreen = 0x0000;  // Return to main menu
+  // CurrentScreen = 0x0000;  // Return to main menu
   Display_About_POST();
 }
 
 void Display_About_PRE() {
-  ClearScreen();
+  // ClearScreen();
   lv_obj_t* scr = lv_screen_active();
 
   // Background (dark theme as in other screens)
@@ -15,10 +15,10 @@ void Display_About_PRE() {
   lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
 
   // Show current screen ID (top-left), consistent with other screens
-  char hex_buffer[8];
-  snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
-  lv_obj_t* id_label = create_label(scr, hex_buffer, &lv_font_montserrat_12, lv_color_white());
-  lv_obj_align(id_label, LV_ALIGN_TOP_LEFT, 0, 0);
+  // char hex_buffer[8];
+  // snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
+  // lv_obj_t* id_label = create_label(scr, hex_buffer, &lv_font_montserrat_12, lv_color_white());
+  // lv_obj_align(id_label, LV_ALIGN_TOP_LEFT, 0, 0);
 
   // Exit Button (replacing close icon)
   lv_obj_t* exit_button = lv_button_create(scr);

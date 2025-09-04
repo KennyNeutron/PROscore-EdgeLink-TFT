@@ -1,4 +1,4 @@
-uint16_t CurrentScreen = 0x0000;
+uint16_t CurrentScreenID = 0x0000;
 
 //PROscore Variables
 uint8_t GameTime_Minute;

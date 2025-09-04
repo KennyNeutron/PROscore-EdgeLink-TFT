@@ -1,6 +1,3 @@
-static lv_obj_t* SCR_MainMenu;
-
-
 // Global variables to hold buttons and status label
 lv_obj_t* buttons[6];
 lv_obj_t* status_label;
@@ -30,27 +27,26 @@ void on_button_click(lv_event_t* e) {
     case 0:  // NRF24L01 Tester
       // Handle NRF24L01 Tester screen
       lv_obj_del(SCR_CurrentScreen);
+      Display_NRF24L01Tester_POST();
       Display_NRF24L01Tester();
       break;
     case 1:  // PROscore RX
       // Handle PROscore RX screen
-      CurrentScreen = 0x2000;  // Change to PROscore RX screen
-      Display_MainMenu_POST();
+      lv_obj_del(SCR_CurrentScreen);
+      Display_PROscoreRX_POST();
+      Display_PROscoreRX();
+      // Display_MainMenu_POST();
       break;
     case 2:  // HC-05 Tester
       // Handle HC-05 Tester screen
       break;
     case 3:  // PROscore TX
       // Handle PROscore TX screen
-      CurrentScreen = 0x4000;  // Change to PROscore TX screen
-      Display_MainMenu_POST();
       break;
     case 4:  // Settings
       // Handle Settings screen
       break;
     case 5:  // About
-      CurrentScreen = 0x6000;
-      Display_MainMenu_POST();
       // Handle about screen
       break;
   }
@@ -64,10 +60,10 @@ void Display_MainMenu_PRE(void) {
   lv_obj_set_style_bg_color(SCR_MainMenu, lv_color_hex(0x000000), 0);
   lv_obj_set_style_bg_opa(SCR_MainMenu, LV_OPA_COVER, 0);
 
+  SCR_CurrentScreen = SCR_MainMenu;
+
   lv_obj_t* id_label = create_label(SCR_MainMenu, "MainMenu", &lv_font_montserrat_12, lv_color_white());
   lv_obj_align(id_label, LV_ALIGN_TOP_LEFT, 0, 0);
-
-  SCR_CurrentScreen = SCR_MainMenu;
 
   // Display dimensions in landscape: 320x240
   const int DISPLAY_WIDTH = 320;
@@ -134,6 +130,7 @@ void Display_MainMenu_PRE(void) {
 
 void Display_MainMenu() {
   if (!Display_MainMenu_Init) {
+    CurrentScreenID = 0x0000;
     Display_MainMenu_PRE();
     Display_MainMenu_Init = true;
   }

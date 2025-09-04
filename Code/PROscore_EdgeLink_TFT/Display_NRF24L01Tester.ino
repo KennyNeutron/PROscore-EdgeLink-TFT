@@ -1,4 +1,4 @@
-static lv_obj_t* SCR_NRF24L01Tester;
+bool Display_NRF24L01Tester_Init = false;
 
 void Display_NRF24L01Tester(void) {
   SCR_NRF24L01Tester = lv_obj_create(NULL);
@@ -15,4 +15,8 @@ void Display_NRF24L01Tester(void) {
   // snprintf(hex_buffer, sizeof(hex_buffer), "0x%04X", CurrentScreen);
   // lv_obj_t* id_label = create_label(SCR_NRF24L01Tester, hex_buffer, &lv_font_montserrat_12, lv_color_white());
   // lv_obj_align(id_label, LV_ALIGN_TOP_LEFT, 0, 0);
+}
+
+void Display_NRF24L01Tester_POST() {
+  Display_NRF24L01Tester_Init = false;
 }
