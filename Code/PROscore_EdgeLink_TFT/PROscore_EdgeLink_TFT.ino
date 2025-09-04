@@ -34,6 +34,7 @@
  * Author: Kenny Neutron
  *******************************************************/
 #include "EdgeLink_Variables.h"
+#include "DataStructure_Payload.h"
 #include <lvgl.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Touchscreen.h>
@@ -186,8 +187,11 @@ void setup() {
 void loop() {
   // Check NRF24L01 status
   if(radio.available()){
+    Serial.println("Data received from NRF24L01");
+    NRF24L01_DecodeData();
     NRF24L01_DataReceived = true;
   } else {
+    Serial.println("No data received from NRF24L01");
     NRF24L01_DataReceived = false;
   }
   

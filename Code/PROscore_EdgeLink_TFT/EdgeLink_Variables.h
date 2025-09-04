@@ -21,6 +21,20 @@ uint8_t Period;
 uint8_t BallPoss;
 bool Buzzer;
 
+//msc
+bool GT_SC_sync = false;
+
+bool SetupMode = false;
+uint8_t DataToSet = 0;
+
+uint32_t blinker_millis = 0;
+bool blink = false;
+
+bool EndOfGame = false;
+
+//TeamNames
+bool TeamNameSetupMode = false;
+
 //PROscore Settings
 bool HasMillis = false;
 bool HasTimeOut = false;

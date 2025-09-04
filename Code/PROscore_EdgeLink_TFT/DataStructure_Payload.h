@@ -8,7 +8,7 @@ struct Payload_Data {
   uint8_t HomeTOut = 0;
   uint8_t GuestTOut = 0;
 
-  uint8_t period = 1;
+  uint8_t Period = 1;
 
   uint8_t GameTime_Minute = 0;
   uint8_t GameTime_Second = 0;

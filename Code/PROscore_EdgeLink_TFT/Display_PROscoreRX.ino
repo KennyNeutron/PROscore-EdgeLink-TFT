@@ -34,8 +34,8 @@ void Display_PROscoreRX_PRE(void) {
   // WiFi icon
   // WiFi icon - store reference globally for real-time updates
   lv_color_t wifi_color = NRF24L01_DataReceived ? lv_color_hex(0x00FF00) : lv_color_hex(0xFF0000);
-  Icon_WIFI_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_WIFI, &lv_font_montserrat_16, wifi_color);
-  lv_obj_align(Icon_WIFI_Label, LV_ALIGN_TOP_RIGHT, -5, 5);
+  Icon_WIFI_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_WIFI, &lv_font_montserrat_24, wifi_color);
+  lv_obj_align(Icon_WIFI_Label, LV_ALIGN_TOP_RIGHT, -6, 6);
 
   // Initialize the last state
   last_NRF24L01_state = NRF24L01_DataReceived;
@@ -232,6 +232,7 @@ void update_wifi_icon_realtime() {
       
       // Optional: Serial feedback for debugging
       Serial.println(NRF24L01_DataReceived ? "WiFi icon: GREEN (Data received)" : "WiFi icon: RED (No data)");
+      Serial.println("ShotClock_Second: " + String(ShotClock_Second));
     }
   }
 }
