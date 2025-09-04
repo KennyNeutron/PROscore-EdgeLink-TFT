@@ -117,11 +117,19 @@ static lv_obj_t* SCR_About;
 //LV Variables
 lv_obj_t* Icon_WIFI_Label = NULL;
 lv_obj_t* Label_ShotClock = NULL;
+lv_obj_t* Label_GameTime = NULL;
 
-// State tracking variables
+//State tracking variables
 bool last_NRF24L01_state = false;  // Track last state to detect changes
+
+//ShotClock tracking variables
 int last_ShotClock_Second = -1;  // Track last ShotClock value (-1 means uninitialized)
 int last_ShotClock_Millis = -1;  // Track last ShotClock millis value (-1 means uninitialized)
+
+//GameTime tracking variables
+int last_GameTime_Minute = -1;  // Track last GameTime minute value (-1 means uninitialized)
+int last_GameTime_Second = -1;  // Track last GameTime second value (-1 means uninitialized)
+int last_GameTime_Millis = -1;  // Track last GameTime millis value (-
 
 static void CloseIcon_Clicked(lv_event_t* e) {
   switch (CurrentScreenID) {
@@ -204,6 +212,7 @@ void loop() {
   if (CurrentScreenID == 0x2000) {
     update_wifi_icon_realtime();
     update_shotclock_realtime();
+    update_gametime_realtime();
   }
 
   Display_MainMenu();

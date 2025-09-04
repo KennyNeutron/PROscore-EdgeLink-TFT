@@ -70,8 +70,15 @@ void Display_PROscoreRX_PRE(void) {
   } else {
     snprintf(time_str, sizeof(time_str), "%02d:%02d", GameTime_Minute, GameTime_Second);
   }
-  lv_obj_t* Label_GameTime = create_label(SCR_PROscoreRX, time_str, &lv_font_montserrat_48, lv_color_hex(0xFF8C00));
+  
+  // Store reference globally for real-time updates
+  Label_GameTime = create_label(SCR_PROscoreRX, time_str, &lv_font_montserrat_48, lv_color_hex(0xFF8C00));
   lv_obj_align(Label_GameTime, LV_ALIGN_TOP_MID, 0, 20);
+
+  // Initialize the last GameTime state
+  last_GameTime_Minute = GameTime_Minute;
+  last_GameTime_Second = GameTime_Second;
+  last_GameTime_Millis = GameTime_Millis;
 
 
   // ShotClock Section
@@ -227,6 +234,9 @@ void Display_PROscoreRX_POST() {
   last_NRF24L01_state = false;  // Reset state tracker
   last_ShotClock_Second = -1;   // Reset ShotClock state tracker
   last_ShotClock_Millis = -1;   // Reset ShotClock state tracker
+  last_GameTime_Minute = -1;   // Reset GameTime minute tracker
+  last_GameTime_Second = -1;   // Reset GameTime second tracker
+  last_GameTime_Millis = -1;   // Reset GameTime millis tracker
 }
 
 // Real-time WiFi icon color update function
@@ -284,6 +294,52 @@ void update_shotclock_realtime() {
       last_ShotClock_Second = ShotClock_Second;
       if (HasMillis) {
         last_ShotClock_Millis = ShotClock_Millis;
+      }
+    }
+  }
+}
+
+// Real-time GameTime update function
+void update_gametime_realtime() {
+  // Only update if we're on PROscoreRX screen and label exists
+  if (CurrentScreenID == 0x2000 && Label_GameTime != NULL) {
+    
+    // Check if the label object is still valid (safety check)
+    if (!lv_obj_is_valid(Label_GameTime)) {
+      Label_GameTime = NULL;
+      return;
+    }
+    
+    // Determine which values to check based on HasMillis setting
+    bool values_changed = false;
+    if (HasMillis) {
+      // Check minute, second, and milliseconds when HasMillis is true
+      values_changed = (GameTime_Minute != last_GameTime_Minute || 
+                       GameTime_Second != last_GameTime_Second ||
+                       GameTime_Millis != last_GameTime_Millis);
+    } else {
+      // Only check minute and second when HasMillis is false
+      values_changed = (GameTime_Minute != last_GameTime_Minute || 
+                       GameTime_Second != last_GameTime_Second);
+    }
+    
+    // Only proceed if values actually changed
+    if (values_changed) {
+      char time_str[8];
+      if (HasMillis) {
+        snprintf(time_str, sizeof(time_str), "%02d:%02d.%d", GameTime_Minute, GameTime_Second, GameTime_Millis);
+      } else {
+        snprintf(time_str, sizeof(time_str), "%02d:%02d", GameTime_Minute, GameTime_Second);
+      }
+
+      // Update the label text
+      lv_label_set_text(Label_GameTime, time_str);
+
+      // Update last state for relevant values
+      last_GameTime_Minute = GameTime_Minute;
+      last_GameTime_Second = GameTime_Second;
+      if (HasMillis) {
+        last_GameTime_Millis = GameTime_Millis;
       }
     }
   }
