@@ -44,8 +44,8 @@
 #include "DigitalIO.h"
 
 // NRF24L01 pins (different from TFT)
-#define NRF_CE   22
-#define NRF_CSN  27
+#define NRF_CE 22
+#define NRF_CSN 27
 
 // Initialize RF24 with CE and CSN pins
 RF24 radio(NRF_CE, NRF_CSN);
@@ -116,7 +116,12 @@ static lv_obj_t* SCR_About;
 
 //LV Variables
 lv_obj_t* Icon_WIFI_Label = NULL;
+lv_obj_t* Label_ShotClock = NULL;
+
+// State tracking variables
 bool last_NRF24L01_state = false;  // Track last state to detect changes
+int last_ShotClock_Second = -1;  // Track last ShotClock value (-1 means uninitialized)
+int last_ShotClock_Millis = -1;  // Track last ShotClock millis value (-1 means uninitialized)
 
 static void CloseIcon_Clicked(lv_event_t* e) {
   switch (CurrentScreenID) {
@@ -171,13 +176,13 @@ void setup() {
   // Set the callback function to read Touchscreen input
   lv_indev_set_read_cb(indev, touchscreen_read);
 
-  if(!radio.begin()) {
+  if (!radio.begin()) {
     Serial.println("NRF24L01 hardware not responding!");
   } else {
     Serial.println("NRF24L01 initialized on custom SPI");
-    radio.printDetails(); // Optional: print radio config
+    radio.printDetails();  // Optional: print radio config
   }
-  
+
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_250KBPS);
   radio.openReadingPipe(0, address);
@@ -186,7 +191,7 @@ void setup() {
 
 void loop() {
   // Check NRF24L01 status
-  if(radio.available()){
+  if (radio.available()) {
     Serial.println("Data received from NRF24L01");
     NRF24L01_DecodeData();
     NRF24L01_DataReceived = true;
@@ -194,12 +199,13 @@ void loop() {
     Serial.println("No data received from NRF24L01");
     NRF24L01_DataReceived = false;
   }
-  
+
   // Only update WiFi icon if we're on the PROscoreRX screen (more efficient)
   if (CurrentScreenID == 0x2000) {
     update_wifi_icon_realtime();
+    update_shotclock_realtime();
   }
-  
+
   Display_MainMenu();
 
   lv_task_handler();

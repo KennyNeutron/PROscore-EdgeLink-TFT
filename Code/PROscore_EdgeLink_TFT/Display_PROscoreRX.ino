@@ -84,9 +84,15 @@ void Display_PROscoreRX_PRE(void) {
   } else {
     snprintf(STR_ShotClock, sizeof(STR_ShotClock), "%d", ShotClock_Second);
   }
-  lv_obj_t* Label_ShotClock = create_label(SCR_PROscoreRX, STR_ShotClock, &lv_font_montserrat_48, lv_color_hex(0x00FF00));
+
+  // Store reference globally for real-time updates
+  Label_ShotClock = create_label(SCR_PROscoreRX, STR_ShotClock, &lv_font_montserrat_48, lv_color_hex(0x00FF00));
   lv_obj_align(Label_ShotClock, LV_ALIGN_CENTER, 0, 0);
   lv_obj_set_style_text_align(Label_ShotClock, LV_TEXT_ALIGN_CENTER, 0);
+
+  // Initialize the last state
+  last_ShotClock_Second = ShotClock_Second;
+  last_ShotClock_Millis = ShotClock_Millis;
 
   // Scores Section
   // Home team
@@ -216,8 +222,11 @@ void Display_PROscoreRX() {
 
 void Display_PROscoreRX_POST() {
   Display_PROscoreRX_Init = false;
-  Icon_WIFI_Label = NULL; // Clear the reference
-  last_NRF24L01_state = false; // Reset state tracker
+  Icon_WIFI_Label = NULL;       // Clear the reference
+  Label_ShotClock = NULL;       // Clear ShotClock reference
+  last_NRF24L01_state = false;  // Reset state tracker
+  last_ShotClock_Second = -1;   // Reset ShotClock state tracker
+  last_ShotClock_Millis = -1;   // Reset ShotClock state tracker
 }
 
 // Real-time WiFi icon color update function
@@ -228,11 +237,37 @@ void update_wifi_icon_realtime() {
     if (NRF24L01_DataReceived != last_NRF24L01_state) {
       lv_color_t new_color = NRF24L01_DataReceived ? lv_color_hex(0x00FF00) : lv_color_hex(0xFF0000);
       lv_obj_set_style_text_color(Icon_WIFI_Label, new_color, LV_PART_MAIN);
-      last_NRF24L01_state = NRF24L01_DataReceived; // Update last state
-      
+      last_NRF24L01_state = NRF24L01_DataReceived;  // Update last state
+
       // Optional: Serial feedback for debugging
       Serial.println(NRF24L01_DataReceived ? "WiFi icon: GREEN (Data received)" : "WiFi icon: RED (No data)");
       Serial.println("ShotClock_Second: " + String(ShotClock_Second));
+    }
+  }
+}
+
+// Real-time ShotClock update function
+void update_shotclock_realtime() {
+  // Only update if we're on PROscoreRX screen and label exists
+  if (CurrentScreenID == 0x2000 && Label_ShotClock != NULL) {
+    // Check if ShotClock value has changed
+    if (ShotClock_Second != last_ShotClock_Second || ShotClock_Millis != last_ShotClock_Millis) {
+      char STR_ShotClock[6];
+      if (HasMillis) {
+        snprintf(STR_ShotClock, sizeof(STR_ShotClock), "%d.%d", ShotClock_Second, ShotClock_Millis);
+      } else {
+        snprintf(STR_ShotClock, sizeof(STR_ShotClock), "%d", ShotClock_Second);
+      }
+
+      // Update the label text
+      lv_label_set_text(Label_ShotClock, STR_ShotClock);
+
+      // Update last state
+      last_ShotClock_Second = ShotClock_Second;
+      last_ShotClock_Millis = ShotClock_Millis;
+
+      // Optional: Serial feedback for debugging
+      Serial.println("ShotClock updated to: " + String(ShotClock_Second));
     }
   }
 }
