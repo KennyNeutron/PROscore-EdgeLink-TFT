@@ -250,8 +250,26 @@ void update_wifi_icon_realtime() {
 void update_shotclock_realtime() {
   // Only update if we're on PROscoreRX screen and label exists
   if (CurrentScreenID == 0x2000 && Label_ShotClock != NULL) {
-    // Check if ShotClock value has changed
-    if (ShotClock_Second != last_ShotClock_Second || ShotClock_Millis != last_ShotClock_Millis) {
+    
+    // Check if the label object is still valid (safety check)
+    if (!lv_obj_is_valid(Label_ShotClock)) {
+      Label_ShotClock = NULL;
+      return;
+    }
+    
+    // Determine which values to check based on HasMillis setting
+    bool values_changed = false;
+    if (HasMillis) {
+      // Check both seconds and milliseconds when HasMillis is true
+      values_changed = (ShotClock_Second != last_ShotClock_Second || 
+                       ShotClock_Millis != last_ShotClock_Millis);
+    } else {
+      // Only check seconds when HasMillis is false (more efficient)
+      values_changed = (ShotClock_Second != last_ShotClock_Second);
+    }
+    
+    // Only proceed if values actually changed
+    if (values_changed) {
       char STR_ShotClock[6];
       if (HasMillis) {
         snprintf(STR_ShotClock, sizeof(STR_ShotClock), "%d.%d", ShotClock_Second, ShotClock_Millis);
@@ -262,12 +280,11 @@ void update_shotclock_realtime() {
       // Update the label text
       lv_label_set_text(Label_ShotClock, STR_ShotClock);
 
-      // Update last state
+      // Update last state for relevant values
       last_ShotClock_Second = ShotClock_Second;
-      last_ShotClock_Millis = ShotClock_Millis;
-
-      // Optional: Serial feedback for debugging
-      Serial.println("ShotClock updated to: " + String(ShotClock_Second));
+      if (HasMillis) {
+        last_ShotClock_Millis = ShotClock_Millis;
+      }
     }
   }
 }
