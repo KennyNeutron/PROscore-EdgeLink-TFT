@@ -140,7 +140,8 @@ void setup() {
 }
 
 void loop() {
-  Display();
+  //Display();
+  Display_NRF24L01Tester();
   lv_task_handler();  // let the GUI do its work
   lv_tick_inc(5);     // tell LVGL how much time has passed
   delay(5);           // let this time pass
