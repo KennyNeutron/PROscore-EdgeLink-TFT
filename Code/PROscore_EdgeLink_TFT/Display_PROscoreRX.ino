@@ -111,7 +111,7 @@ void Display_PROscoreRX_PRE(void) {
   // Store reference globally for real-time updates
   Label_HomeScore = create_label(SCR_PROscoreRX, STR_HomeScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
   uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25
-                                                                    : 30;
+                                                                    : 15;
   lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, Margin_HomeScore, 0);
 
   // Guest team
@@ -223,32 +223,29 @@ void Display_PROscoreRX_PRE(void) {
   last_Period = Period;
 
   BallPoss = 0;
-  //Ball Poss Section
-  if (BallPoss == 0) {
-    lv_obj_t* Icon_Left_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_black());
-    lv_obj_align(Icon_Left_Label, LV_ALIGN_BOTTOM_MID, -45, -21);
 
-    lv_obj_t* Icon_Right_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_RIGHT, &lv_font_montserrat_32, lv_color_black());
-    lv_obj_align(Icon_Right_Label, LV_ALIGN_BOTTOM_MID, 45, -21);
-  } else if (BallPoss == 1) {
-    lv_obj_t* Icon_Left_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_hex(0xFFFF00));
-    lv_obj_align(Icon_Left_Label, LV_ALIGN_BOTTOM_MID, -45, -21);
+  //Ball Poss Section - store references globally for real-time updates
+  Label_BallPoss_Left = create_label(SCR_PROscoreRX, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_black());
+  lv_obj_align(Label_BallPoss_Left, LV_ALIGN_BOTTOM_MID, -45, -21);
 
-    lv_obj_t* Icon_Right_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_RIGHT, &lv_font_montserrat_32, lv_color_black());
-    lv_obj_align(Icon_Right_Label, LV_ALIGN_BOTTOM_MID, 45, -21);
+  Label_BallPoss_Right = create_label(SCR_PROscoreRX, LV_SYMBOL_RIGHT, &lv_font_montserrat_32, lv_color_black());
+  lv_obj_align(Label_BallPoss_Right, LV_ALIGN_BOTTOM_MID, 45, -21);
+
+  // Set initial colors based on BallPoss value
+  if (BallPoss == 1) {
+    lv_obj_set_style_text_color(Label_BallPoss_Left, lv_color_hex(0xFFFF00), LV_PART_MAIN);
+    lv_obj_set_style_text_color(Label_BallPoss_Right, lv_color_black(), LV_PART_MAIN);
   } else if (BallPoss == 2) {
-    lv_obj_t* Icon_Left_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_black());
-    lv_obj_align(Icon_Left_Label, LV_ALIGN_BOTTOM_MID, -45, -21);
-
-    lv_obj_t* Icon_Right_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_RIGHT, &lv_font_montserrat_32, lv_color_hex(0xFFFF00));
-    lv_obj_align(Icon_Right_Label, LV_ALIGN_BOTTOM_MID, 45, -21);
+    lv_obj_set_style_text_color(Label_BallPoss_Left, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_text_color(Label_BallPoss_Right, lv_color_hex(0xFFFF00), LV_PART_MAIN);
   } else {
-    lv_obj_t* Icon_Left_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_LEFT, &lv_font_montserrat_32, lv_color_black());
-    lv_obj_align(Icon_Left_Label, LV_ALIGN_BOTTOM_MID, -45, -21);
-
-    lv_obj_t* Icon_Right_Label = create_label(SCR_PROscoreRX, LV_SYMBOL_RIGHT, &lv_font_montserrat_32, lv_color_black());
-    lv_obj_align(Icon_Right_Label, LV_ALIGN_BOTTOM_MID, 45, -21);
+    // BallPoss == 0 or any other value - both black
+    lv_obj_set_style_text_color(Label_BallPoss_Left, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_text_color(Label_BallPoss_Right, lv_color_black(), LV_PART_MAIN);
   }
+
+  // Initialize ball possession tracking
+  last_BallPoss = BallPoss;
 }
 
 void Display_PROscoreRX() {
@@ -273,6 +270,8 @@ void Display_PROscoreRX_POST() {
   Label_HomeTOut = NULL;    // Clear HomeTOut reference
   Label_GuestTOut = NULL;   // Clear GuestTOut reference
   Label_Period = NULL;      // Clear Period reference
+  Label_BallPoss_Left = NULL;   // Clear BallPoss Left reference
+  Label_BallPoss_Right = NULL;  // Clear BallPoss Right reference
 
   //Reset State Trackers
   last_NRF24L01_state = false;  // Reset state tracker
@@ -288,6 +287,7 @@ void Display_PROscoreRX_POST() {
   last_HomeTOut = -1;           // Reset HomeTOut tracker
   last_GuestTOut = -1;          // Reset GuestTOut tracker
   last_Period = -1;             // Reset Period tracker
+  last_BallPoss = -1;           // Reset BallPoss tracker
 }
 
 // Real-time WiFi icon color update function
@@ -403,7 +403,7 @@ void update_scores_realtime() {
 
       // Update alignment based on score digits (same logic as original)
       uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25
-                                                                        : 30;
+                                                                        : 15;
       lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, Margin_HomeScore, 0);
 
       last_HomeScore = HomeScore;
@@ -482,6 +482,33 @@ void update_period_realtime() {
         lv_label_set_text(Label_Period, STR_Period);
       }
       last_Period = Period;
+    }
+  }
+}
+
+// Real-time Ball Possession update function
+void update_ballposs_realtime() {
+  if (CurrentScreenID == 0x2000) {
+    // Check if ball possession has changed
+    if ((Label_BallPoss_Left != NULL && lv_obj_is_valid(Label_BallPoss_Left)) &&
+        (Label_BallPoss_Right != NULL && lv_obj_is_valid(Label_BallPoss_Right)) &&
+        (BallPoss != last_BallPoss)) {
+      
+      if (BallPoss == 1) {
+        // Home team has possession - left arrow yellow, right arrow black
+        lv_obj_set_style_text_color(Label_BallPoss_Left, lv_color_hex(0xFFFF00), LV_PART_MAIN);
+        lv_obj_set_style_text_color(Label_BallPoss_Right, lv_color_black(), LV_PART_MAIN);
+      } else if (BallPoss == 2) {
+        // Guest team has possession - left arrow black, right arrow yellow
+        lv_obj_set_style_text_color(Label_BallPoss_Left, lv_color_black(), LV_PART_MAIN);
+        lv_obj_set_style_text_color(Label_BallPoss_Right, lv_color_hex(0xFFFF00), LV_PART_MAIN);
+      } else {
+        // No possession (BallPoss == 0 or any other value) - both arrows black
+        lv_obj_set_style_text_color(Label_BallPoss_Left, lv_color_black(), LV_PART_MAIN);
+        lv_obj_set_style_text_color(Label_BallPoss_Right, lv_color_black(), LV_PART_MAIN);
+      }
+      
+      last_BallPoss = BallPoss;
     }
   }
 }

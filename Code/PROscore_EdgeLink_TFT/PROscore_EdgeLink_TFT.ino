@@ -125,6 +125,8 @@ lv_obj_t* Label_GuestFoul = NULL;
 lv_obj_t* Label_HomeTOut = NULL;
 lv_obj_t* Label_GuestTOut = NULL;
 lv_obj_t* Label_Period = NULL;
+lv_obj_t* Label_BallPoss_Left = NULL;
+lv_obj_t* Label_BallPoss_Right = NULL;
 
 //State tracking variables
 bool last_NRF24L01_state = false;  // Track last state to detect changes
@@ -152,6 +154,9 @@ int last_GuestTOut = -1;  // Track last GuestTOut value (-1 means uninitialized)
 
 //Period tracking variable
 int last_Period = -1;     // Track last Period value (-1 means uninitialized)
+
+//BallPoss tracking variables
+int last_BallPoss = -1;  // Track last BallPoss value (-1 means uninitialized)
 
 static void CloseIcon_Clicked(lv_event_t* e) {
   switch (CurrentScreenID) {
@@ -239,6 +244,7 @@ void loop() {
     update_fouls_realtime();
     update_timeouts_realtime();
     update_period_realtime();
+    update_ballposs_realtime();
   }
 
   Display_MainMenu();
