@@ -33,6 +33,13 @@ void on_button_click(lv_event_t* e) {
     case 1:  // PROscore RX
       // Handle PROscore RX screen
       lv_obj_del(SCR_CurrentScreen);
+
+      radio.setChannel(76);
+      radio.setPALevel(RF24_PA_MAX);
+      radio.setDataRate(RF24_250KBPS);
+      radio.openReadingPipe(0, address);
+      radio.startListening();
+
       Display_PROscoreRX_POST();
       Display_PROscoreRX();
       break;

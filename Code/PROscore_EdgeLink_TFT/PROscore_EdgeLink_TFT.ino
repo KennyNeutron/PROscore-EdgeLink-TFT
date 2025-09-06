@@ -218,6 +218,7 @@ void setup() {
     radio.printDetails();  // Optional: print radio config
   }
 
+  radio.setChannel(76);
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_250KBPS);
   radio.openReadingPipe(0, address);
@@ -258,6 +259,9 @@ void loop() {
       // No specific updates needed for other screens
       break;
   }
+  uint8_t channel = radio.getChannel();  // TMRh20 RF24 has this helper function
+  Serial.print("Current channel: ");
+  Serial.println(channel);
 
   lv_task_handler();
   lv_tick_inc(5);
