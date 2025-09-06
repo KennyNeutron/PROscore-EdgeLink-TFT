@@ -260,16 +260,16 @@ void Display_PROscoreRX_POST() {
   Display_PROscoreRX_Init = false;
 
   //Clear Label References
-  Icon_WIFI_Label = NULL;   // Clear the reference
-  Label_ShotClock = NULL;   // Clear ShotClock reference
-  Label_GameTime = NULL;    // Clear GameTime reference
-  Label_HomeScore = NULL;   // Clear HomeScore reference
-  Label_GuestScore = NULL;  // Clear GuestScore reference
-  Label_HomeFoul = NULL;    // Clear HomeFoul reference
-  Label_GuestFoul = NULL;   // Clear GuestFoul reference
-  Label_HomeTOut = NULL;    // Clear HomeTOut reference
-  Label_GuestTOut = NULL;   // Clear GuestTOut reference
-  Label_Period = NULL;      // Clear Period reference
+  Icon_WIFI_Label = NULL;       // Clear the reference
+  Label_ShotClock = NULL;       // Clear ShotClock reference
+  Label_GameTime = NULL;        // Clear GameTime reference
+  Label_HomeScore = NULL;       // Clear HomeScore reference
+  Label_GuestScore = NULL;      // Clear GuestScore reference
+  Label_HomeFoul = NULL;        // Clear HomeFoul reference
+  Label_GuestFoul = NULL;       // Clear GuestFoul reference
+  Label_HomeTOut = NULL;        // Clear HomeTOut reference
+  Label_GuestTOut = NULL;       // Clear GuestTOut reference
+  Label_Period = NULL;          // Clear Period reference
   Label_BallPoss_Left = NULL;   // Clear BallPoss Left reference
   Label_BallPoss_Right = NULL;  // Clear BallPoss Right reference
 
@@ -490,10 +490,8 @@ void update_period_realtime() {
 void update_ballposs_realtime() {
   if (CurrentScreenID == 0x2000) {
     // Check if ball possession has changed
-    if ((Label_BallPoss_Left != NULL && lv_obj_is_valid(Label_BallPoss_Left)) &&
-        (Label_BallPoss_Right != NULL && lv_obj_is_valid(Label_BallPoss_Right)) &&
-        (BallPoss != last_BallPoss)) {
-      
+    if ((Label_BallPoss_Left != NULL && lv_obj_is_valid(Label_BallPoss_Left)) && (Label_BallPoss_Right != NULL && lv_obj_is_valid(Label_BallPoss_Right)) && (BallPoss != last_BallPoss)) {
+
       if (BallPoss == 1) {
         // Home team has possession - left arrow yellow, right arrow black
         lv_obj_set_style_text_color(Label_BallPoss_Left, lv_color_hex(0xFFFF00), LV_PART_MAIN);
@@ -507,7 +505,7 @@ void update_ballposs_realtime() {
         lv_obj_set_style_text_color(Label_BallPoss_Left, lv_color_black(), LV_PART_MAIN);
         lv_obj_set_style_text_color(Label_BallPoss_Right, lv_color_black(), LV_PART_MAIN);
       }
-      
+
       last_BallPoss = BallPoss;
     }
   }

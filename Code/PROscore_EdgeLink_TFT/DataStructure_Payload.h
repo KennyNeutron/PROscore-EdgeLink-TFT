@@ -30,9 +30,7 @@ struct Payload_Data {
   uint8_t TN_ID = 0;
   char CurrentTeamName[10] = "xxxxxxxx";
 
-  bool EndOfGame=false;
-
-
+  bool EndOfGame = false;
 };
 
 Payload_Data payload;  // Create a variable with the above structure

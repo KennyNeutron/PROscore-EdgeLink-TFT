@@ -153,7 +153,7 @@ int last_HomeTOut = -1;   // Track last HomeTOut value (-1 means uninitialized)
 int last_GuestTOut = -1;  // Track last GuestTOut value (-1 means uninitialized)
 
 //Period tracking variable
-int last_Period = -1;     // Track last Period value (-1 means uninitialized)
+int last_Period = -1;  // Track last Period value (-1 means uninitialized)
 
 //BallPoss tracking variables
 int last_BallPoss = -1;  // Track last BallPoss value (-1 means uninitialized)
@@ -239,7 +239,7 @@ void loop() {
 
 
   switch (CurrentScreenID) {
-    case 0x2000: // PROscoreRX screen
+    case 0x2000:  // PROscoreRX screen
       update_wifi_icon_realtime();
       update_shotclock_realtime();
       update_gametime_realtime();
@@ -249,11 +249,11 @@ void loop() {
       update_period_realtime();
       update_ballposs_realtime();
       break;
-      
-    case 0x1000: // NRF24L01 Tester screen
+
+    case 0x1000:  // NRF24L01 Tester screen
       update_nrf24l01_tester_realtime();
       break;
-      
+
     default:
       // No specific updates needed for other screens
       break;

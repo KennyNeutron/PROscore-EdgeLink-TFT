@@ -21,4 +21,4 @@ extern lv_obj_t* create_label(lv_obj_t* parent, const char* text, const lv_font_
 // Close icon event handler declaration
 extern void CloseIcon_Clicked(lv_event_t* e);
 
-#endif // NRF24L01_TESTER_FUNCTIONS_H
+#endif  // NRF24L01_TESTER_FUNCTIONS_H
