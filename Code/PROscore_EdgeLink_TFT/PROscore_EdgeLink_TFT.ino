@@ -222,6 +222,8 @@ void setup() {
   radio.setDataRate(RF24_250KBPS);
   radio.openReadingPipe(0, address);
   radio.startListening();
+
+  Display_MainMenu();
 }
 
 void loop() {
@@ -235,19 +237,27 @@ void loop() {
     NRF24L01_DataReceived = false;
   }
 
-  // Only update WiFi icon if we're on the PROscoreRX screen (more efficient)
-  if (CurrentScreenID == 0x2000) {
-    update_wifi_icon_realtime();
-    update_shotclock_realtime();
-    update_gametime_realtime();
-    update_scores_realtime();
-    update_fouls_realtime();
-    update_timeouts_realtime();
-    update_period_realtime();
-    update_ballposs_realtime();
-  }
 
-  Display_MainMenu();
+  switch (CurrentScreenID) {
+    case 0x2000: // PROscoreRX screen
+      update_wifi_icon_realtime();
+      update_shotclock_realtime();
+      update_gametime_realtime();
+      update_scores_realtime();
+      update_fouls_realtime();
+      update_timeouts_realtime();
+      update_period_realtime();
+      update_ballposs_realtime();
+      break;
+      
+    case 0x1000: // NRF24L01 Tester screen
+      update_nrf24l01_tester_realtime();
+      break;
+      
+    default:
+      // No specific updates needed for other screens
+      break;
+  }
 
   lv_task_handler();
   lv_tick_inc(5);
