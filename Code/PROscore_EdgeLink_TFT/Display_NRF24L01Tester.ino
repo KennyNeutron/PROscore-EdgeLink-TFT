@@ -174,7 +174,7 @@ void Display_NRF24L01Tester_PRE(void) {
 
   // Configuration section
   lv_obj_t* config_title = create_label(SCR_NRF24L01Tester, "CONFIGURATION", &lv_font_montserrat_14, lv_color_hex(0xFF8C00));
-  lv_obj_align(config_title, LV_ALIGN_TOP_LEFT, 0, 55);
+  lv_obj_align(config_title, LV_ALIGN_TOP_LEFT, 0, 60);
 
   // Channel (clickable)
   Label_Channel = create_label(SCR_NRF24L01Tester, "Channel: 76", &lv_font_montserrat_12, lv_color_hex(0x00FFFF));

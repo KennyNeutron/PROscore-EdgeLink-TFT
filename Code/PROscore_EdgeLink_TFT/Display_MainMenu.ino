@@ -51,6 +51,9 @@ void on_button_click(lv_event_t* e) {
       break;
     case 4:  // Settings
       // Handle Settings screen
+      lv_obj_del(SCR_CurrentScreen);
+      Display_Settings_POST();
+      Display_Settings();
       break;
     case 5:  // About
       // Handle about screen

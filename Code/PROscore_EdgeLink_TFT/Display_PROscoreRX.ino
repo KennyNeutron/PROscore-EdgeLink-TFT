@@ -1,6 +1,5 @@
 bool Display_PROscoreRX_Init = false;
 
-
 static void SettingsIcon_Clicked(lv_event_t* e) {
   Display_PROscoreRX_Settings_POST();
   lv_obj_del(SCR_PROscoreRX);
@@ -60,9 +59,12 @@ void Display_PROscoreRX_PRE(void) {
   HomeTOut = 0;
   GuestTOut = 0;
 
+  LV_FONT_DECLARE(font_SevenSegment_48_bpp1);
+  LV_FONT_DECLARE(font_SevenSegment_36_bpp1);
+
   // Game time Section
   lv_obj_t* Label_GameTime_Text = create_label(SCR_PROscoreRX, "GAME TIME", &lv_font_montserrat_18, lv_color_white());
-  lv_obj_align(Label_GameTime_Text, LV_ALIGN_TOP_MID, 5, 5);
+  lv_obj_align(Label_GameTime_Text, LV_ALIGN_TOP_MID, 0, 0);
 
   char time_str[8];
   if (HasMillis) {
@@ -72,8 +74,8 @@ void Display_PROscoreRX_PRE(void) {
   }
 
   // Store reference globally for real-time updates
-  Label_GameTime = create_label(SCR_PROscoreRX, time_str, &lv_font_montserrat_48, lv_color_hex(0xFF8C00));
-  lv_obj_align(Label_GameTime, LV_ALIGN_TOP_MID, 0, 20);
+  Label_GameTime = create_label(SCR_PROscoreRX, time_str, &font_SevenSegment_48_bpp1, lv_color_hex(0xFF8C00));
+  lv_obj_align(Label_GameTime, LV_ALIGN_TOP_MID, 0, 25);
 
   // Initialize the last GameTime state
   last_GameTime_Minute = GameTime_Minute;
@@ -93,7 +95,7 @@ void Display_PROscoreRX_PRE(void) {
   }
 
   // Store reference globally for real-time updates
-  Label_ShotClock = create_label(SCR_PROscoreRX, STR_ShotClock, &lv_font_montserrat_48, lv_color_hex(0x00FF00));
+  Label_ShotClock = create_label(SCR_PROscoreRX, STR_ShotClock, &font_SevenSegment_48_bpp1, lv_color_hex(0x00FF00));
   lv_obj_align(Label_ShotClock, LV_ALIGN_CENTER, 0, 0);
   lv_obj_set_style_text_align(Label_ShotClock, LV_TEXT_ALIGN_CENTER, 0);
 
@@ -104,25 +106,25 @@ void Display_PROscoreRX_PRE(void) {
   // Scores Section
   // Home team
   lv_obj_t* Label_HomeTeam_Text = create_label(SCR_PROscoreRX, "HOME", &lv_font_montserrat_18, lv_color_white());
-  lv_obj_align(Label_HomeTeam_Text, LV_ALIGN_BOTTOM_LEFT, 21, -44);
+  lv_obj_align(Label_HomeTeam_Text, LV_ALIGN_BOTTOM_LEFT, 21, -40);
 
   char STR_HomeScore[6];
   snprintf(STR_HomeScore, sizeof(STR_HomeScore), "%d", HomeScore);
   // Store reference globally for real-time updates
-  Label_HomeScore = create_label(SCR_PROscoreRX, STR_HomeScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
-  uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25
-                                                                    : 15;
+  Label_HomeScore = create_label(SCR_PROscoreRX, STR_HomeScore, &font_SevenSegment_48_bpp1, lv_color_hex(0xFF0000));
+  uint Margin_HomeScore = (HomeScore < 10) ? 55 : (HomeScore < 100) ? 35
+                                                                    : 7;
   lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, Margin_HomeScore, 0);
 
   // Guest team
   lv_obj_t* Label_GuestTeam_Text = create_label(SCR_PROscoreRX, "GUEST", &lv_font_montserrat_18, lv_color_white());
-  lv_obj_align(Label_GuestTeam_Text, LV_ALIGN_BOTTOM_RIGHT, -15, -44);
+  lv_obj_align(Label_GuestTeam_Text, LV_ALIGN_BOTTOM_RIGHT, -15, -40);
 
   char STR_GuestScore[6];
   snprintf(STR_GuestScore, sizeof(STR_GuestScore), "%d", GuestScore);
   // Store reference globally for real-time updates
-  Label_GuestScore = create_label(SCR_PROscoreRX, STR_GuestScore, &lv_font_montserrat_48, lv_color_hex(0xFF0000));
-  lv_obj_align(Label_GuestScore, LV_ALIGN_BOTTOM_RIGHT, -12, 0);
+  Label_GuestScore = create_label(SCR_PROscoreRX, STR_GuestScore, &font_SevenSegment_48_bpp1, lv_color_hex(0xFF0000));
+  lv_obj_align(Label_GuestScore, LV_ALIGN_BOTTOM_RIGHT, -15, 0);
 
   // Initialize score tracking
   last_HomeScore = HomeScore;
@@ -138,7 +140,7 @@ void Display_PROscoreRX_PRE(void) {
     char STR_HomeFoul[3];
     snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
     // Store reference globally for real-time updates
-    Label_HomeFoul = create_label(SCR_PROscoreRX, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    Label_HomeFoul = create_label(SCR_PROscoreRX, STR_HomeFoul, &font_SevenSegment_36_bpp1, lv_color_hex(0xFF00FF));
     lv_obj_align(Label_HomeFoul, LV_ALIGN_LEFT_MID, 18, 24);
 
     //Guest Foul
@@ -148,7 +150,7 @@ void Display_PROscoreRX_PRE(void) {
     char STR_GuestFoul[3];
     snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
     // Store reference globally for real-time updates
-    Label_GuestFoul = create_label(SCR_PROscoreRX, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    Label_GuestFoul = create_label(SCR_PROscoreRX, STR_GuestFoul, &font_SevenSegment_36_bpp1, lv_color_hex(0xFF00FF));
     lv_obj_align(Label_GuestFoul, LV_ALIGN_RIGHT_MID, -18, 24);
 
     //Time Out Section
@@ -158,7 +160,7 @@ void Display_PROscoreRX_PRE(void) {
     char STR_TimeOut[3];
     snprintf(STR_TimeOut, sizeof(STR_TimeOut), "%d", HomeTOut);
     // Store reference globally for real-time updates
-    Label_HomeTOut = create_label(SCR_PROscoreRX, STR_TimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
+    Label_HomeTOut = create_label(SCR_PROscoreRX, STR_TimeOut, &font_SevenSegment_36_bpp1, lv_color_hex(0xFFFF00));
     lv_obj_align(Label_HomeTOut, LV_ALIGN_LEFT_MID, 18, -36);
 
     //Guest Time Out
@@ -168,7 +170,7 @@ void Display_PROscoreRX_PRE(void) {
     char STR_GuestTimeOut[3];
     snprintf(STR_GuestTimeOut, sizeof(STR_GuestTimeOut), "%d", GuestTOut);
     // Store reference globally for real-time updates
-    Label_GuestTOut = create_label(SCR_PROscoreRX, STR_GuestTimeOut, &lv_font_montserrat_36, lv_color_hex(0xFFFF00));
+    Label_GuestTOut = create_label(SCR_PROscoreRX, STR_GuestTimeOut, &font_SevenSegment_36_bpp1, lv_color_hex(0xFFFF00));
     lv_obj_align(Label_GuestTOut, LV_ALIGN_RIGHT_MID, -18, -36);
 
     // Initialize foul and timeout tracking
@@ -186,7 +188,7 @@ void Display_PROscoreRX_PRE(void) {
     char STR_HomeFoul[3];
     snprintf(STR_HomeFoul, sizeof(STR_HomeFoul), "%d", HomeFoul);
     // Store reference globally for real-time updates
-    Label_HomeFoul = create_label(SCR_PROscoreRX, STR_HomeFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    Label_HomeFoul = create_label(SCR_PROscoreRX, STR_HomeFoul, &font_SevenSegment_36_bpp1, lv_color_hex(0xFF00FF));
     lv_obj_align(Label_HomeFoul, LV_ALIGN_LEFT_MID, 18, 6);
 
     //Guest Foul
@@ -196,7 +198,7 @@ void Display_PROscoreRX_PRE(void) {
     char STR_GuestFoul[3];
     snprintf(STR_GuestFoul, sizeof(STR_GuestFoul), "%d", GuestFoul);
     // Store reference globally for real-time updates
-    Label_GuestFoul = create_label(SCR_PROscoreRX, STR_GuestFoul, &lv_font_montserrat_36, lv_color_hex(0xFF00FF));
+    Label_GuestFoul = create_label(SCR_PROscoreRX, STR_GuestFoul, &font_SevenSegment_36_bpp1, lv_color_hex(0xFF00FF));
     lv_obj_align(Label_GuestFoul, LV_ALIGN_RIGHT_MID, -18, 6);
 
     // Initialize foul tracking (no timeout in this case)
@@ -216,8 +218,8 @@ void Display_PROscoreRX_PRE(void) {
   char STR_Period[3];
   snprintf(STR_Period, sizeof(STR_Period), "%d", Period);
   // Store reference globally for real-time updates
-  Label_Period = create_label(SCR_PROscoreRX, STR_Period, &lv_font_montserrat_36, lv_color_hex(0x00FFFF));
-  lv_obj_align(Label_Period, LV_ALIGN_BOTTOM_MID, 0, 0);
+  Label_Period = create_label(SCR_PROscoreRX, STR_Period, &font_SevenSegment_36_bpp1, lv_color_hex(0x00FFFF));
+  lv_obj_align(Label_Period, LV_ALIGN_BOTTOM_MID, 0, -8);
 
   // Initialize period tracking
   last_Period = Period;
@@ -402,8 +404,8 @@ void update_scores_realtime() {
       lv_label_set_text(Label_HomeScore, STR_HomeScore);
 
       // Update alignment based on score digits (same logic as original)
-      uint Margin_HomeScore = (HomeScore < 10) ? 50 : (HomeScore < 100) ? 25
-                                                                        : 15;
+      uint Margin_HomeScore = (HomeScore < 10) ? 55 : (HomeScore < 100) ? 35
+                                                                        : 10;
       lv_obj_align(Label_HomeScore, LV_ALIGN_BOTTOM_LEFT, Margin_HomeScore, 0);
 
       last_HomeScore = HomeScore;

@@ -42,6 +42,8 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 #include "DigitalIO.h"
+#include "font_SevenSegment_48_bpp1.c"
+#include "font_SevenSegment_36_bpp1.c"
 
 // NRF24L01 pins (different from TFT)
 #define NRF_CE 22
@@ -113,6 +115,7 @@ static lv_obj_t* SCR_NRF24L01Tester;
 static lv_obj_t* SCR_PROscoreRX;
 static lv_obj_t* SCR_PROscoreRX_Settings;
 static lv_obj_t* SCR_About;
+static lv_obj_t* SCR_Settings;
 
 //LV Variables
 lv_obj_t* Icon_WIFI_Label = NULL;
@@ -174,6 +177,11 @@ static void CloseIcon_Clicked(lv_event_t* e) {
       lv_obj_del(SCR_CurrentScreen);
       Display_PROscoreRX_POST();
       Display_PROscoreRX();
+      break;
+    case 0x5000:  //Settings
+      lv_obj_del(SCR_CurrentScreen);
+      Display_MainMenu_POST();
+      Display_MainMenu();
       break;
     default:
       CurrentScreenID = 0x0000;
