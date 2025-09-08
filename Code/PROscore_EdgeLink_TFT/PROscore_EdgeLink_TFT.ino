@@ -7,17 +7,16 @@
  *   monitoring tool for the PROscore scoreboard ecosystem. 
  *   It mirrors scoreboard data, inspects signal packets, 
  *   and provides real-time visualization on a TFT display 
- *   using LVGL.
+ *   using LVGL v9.3.0.
  *
  * Board Configuration (Arduino IDE / PlatformIO):
- *   - CPU Frequency:        240 MHz (WiFi/BT enabled)
+ *   - CPU Frequency:        240 MHz
  *   - Events Run On:        Core 1
  *   - Arduino Runs On:      Core 1
  *   - Flash Frequency:      80 MHz
  *   - Flash Mode:           QIO
  *   - Flash Size:           4MB (32Mb)
- *   - Partition Scheme:     Default 4MB with spiffs 
- *                           (1.2MB APP / 1.5MB SPIFFS)
+ *   - Partition Scheme:     Huge APP (3MB APP / 1MB SPIFFS)
  *   - PSRAM:                Disabled
  *   - Upload Speed:         921600 baud
  *   - JTAG Adapter:         Disabled
@@ -25,11 +24,12 @@
  *   - Core Debug Level:     None
  *
  * Notes:
- *   - TFT: ILI9341, SPI interface
- *   - Touch (optional): XPT2046, SPI interface
- *   - LVGL 9.x recommended for UI
- *   - Radio modules (NRF24L01 / ESP-NOW / BLE) supported
+ *   - TFT Driver: ILI9341, SPI interface
+ *   - Touch Controller: XPT2046, SPI interface
+ *   - LVGL 9.3.0 recommended (Dark theme enabled)
+ *   - Radio modules supported: NRF24L01 / ESP-NOW / BLE
  *   - Power: Li-ion battery with USB-C charging
+ *   - Debugging: Serial over USB, optional perf/CPU monitor
  *
  * Author: Kenny Neutron
  *******************************************************/
